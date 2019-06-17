@@ -7,12 +7,12 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/Checkerboard',
-      name: 'Checkerboard',
+      path: '/Tlm',
+      name: 'Tlm',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './layout/Checkerboard.vue'),
+      component: () => import(/* webpackChunkName: "about" */ './layout/Tlm.vue'),
       children:[
         {
           path: '/',
