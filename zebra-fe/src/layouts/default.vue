@@ -3,7 +3,7 @@
         <header>
             <headerbar></headerbar>
         </header>
-        <aside>
+        <aside >
             <asidebar></asidebar>
             <router-view id="main_content"></router-view>
         </aside>
@@ -34,6 +34,7 @@ aside {
     display: flex;
     flex-direction: row;
     flex-grow: 1;
+    background-color: darkgray;
 }
 #main_content{
     flex-grow: 1;

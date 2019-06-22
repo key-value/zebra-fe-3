@@ -21,9 +21,9 @@ export default class Asidebar extends Vue {
 </script>
 <style scoped>
 .el-menu-vertical-demo {
-    background: transparent;
+    background: whitesmoke;
     height: 100%;
-    width: 200px;
+    width: 270px;
 }
 </style>
 

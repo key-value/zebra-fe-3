@@ -3,31 +3,31 @@
         {
             "index": "1",
             "icon": "el-icon-tickets",
-            "url": "/tlm/plat/home",
+            "url": "/plat/home",
             "title": "首页"
         },
         {
             "index": "2",
             "icon": "el-icon-location",
-            "url": "/tlm/plat/target",
+            "url": "/plat/target",
             "title": "目标"
         },
         {
             "index": "3",
             "icon": "el-icon-menu",
-            "url": "/tlm/plat/plan",
+            "url": "/plat/plan",
             "title": "计划"
         },
         {
             "index": "4",
             "icon": "el-icon-document",
-            "url": "/tlm/plat/task",
+            "url": "/plat/task",
             "title": "任务"
         },
         {
             "index": "5",
             "icon": "el-icon-setting",
-            "url": "/tlm/plat/schedule",
+            "url": "/plat/schedule",
             "title": "日程"
         }
     ]
