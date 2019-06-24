@@ -1,4 +1,4 @@
-import { BaseModelVm } from './../shared/base.model'
+import { BaseModelVm } from './../../shared/base.model'
 import { Long, Table, Column, Entity } from 'typeorm'
 
 @Entity()

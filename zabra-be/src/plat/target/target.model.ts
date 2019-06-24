@@ -1,6 +1,6 @@
 import { BaseModelVm } from './../../shared/base.model'
 import { Long, Table, Column, Entity } from 'typeorm'
-import { Plan } from '../plan/plan.model'
+import  Plan from '../plan/plan.model'
 
 @Entity()
 export default class Target extends BaseModelVm {
