@@ -11,7 +11,7 @@ async function bootstrap() {
     .setDescription('User API Info')
     .setVersion('1.0')
     .addBearerAuth()
-    .addTag('users') // match tags in controllers
+    //.addTag('users') // match tags in controllers
     .build();
 
     // 沒有指定第三個參數代表所有Module的controller都會被偵測

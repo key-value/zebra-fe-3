@@ -9,9 +9,12 @@ import { TargetService } from './target/target.service';
 import { StepService } from './step/step.service';
 import { TypeOrmModule } from '@nestjs/typeorm'
 import Plan from './plan/plan.model';
+import Target from './target/target.model';
+import Task from './task/task.model';
+import Step from './step/step.model';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Plan])],
+  imports: [TypeOrmModule.forFeature([Plan,Target,Task,Step])],
   controllers: [PlanController, TaskController, TargetController, StepController],
   providers: [PlanService, TaskService, TargetService, StepService]
 })
