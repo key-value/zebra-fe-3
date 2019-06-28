@@ -1,4 +1,5 @@
 <template>
+<midPage>
     <div>
         <el-row>
             <el-col :span="4">
@@ -95,6 +96,7 @@
             </div>
         </el-dialog>
     </div>
+    </midPage>
 </template>
 
 <script lang="ts">
@@ -103,16 +105,17 @@ import { ModelUtility } from '@/common/model.utility'
 import { Message } from 'element-ui'
 import { Component } from 'vue-property-decorator';
 import Vue from 'vue'
+import midPage from '@/components/midPage.vue';
 
-@Component({
+@Component({components:{midPage}
 })
 export default class Plan extends Vue {
     async initData() {
         // console.log(this.targetList);
-        const data = await this.$axios.get('/api/plan')
-        const targetData = await this.$axios.get('/api/target/all')
+        const data:any = await this.$axios.get('/api/plan')
+        const targetData:any = await this.$axios.get('/api/target/all')
         for (const element of data) {
-            const target = targetData.find((x:any) => x.id === element.targetId)
+            const target = targetData.find((x:any):any => x.id === element.targetId)
             if (target) {
                 element.targetName = target.targetName
             }

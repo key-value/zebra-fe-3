@@ -28,6 +28,10 @@ export default class Tlm extends Vue {
     height: 100vh;
     display: flex;
     flex-direction: column;
+      background-color: #9b9b9b;
+}
+header{
+    background-color: white;
 }
 aside {
     align-items: stretch;
