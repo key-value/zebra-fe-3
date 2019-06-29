@@ -19,6 +19,7 @@ export default class midPage extends Vue {}
   margin: 0;
   padding: 10px;
   background-color: red;
+  height: 100%;
 }
 #midPage_insidediv {
   margin: auto;
