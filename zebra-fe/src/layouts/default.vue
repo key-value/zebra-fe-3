@@ -39,6 +39,7 @@ aside {
     flex-direction: row;
     flex-grow: 1;
     background-color: darkgray;
+  overflow: hidden;
 }
 #main_content{
     flex-grow: 1;
