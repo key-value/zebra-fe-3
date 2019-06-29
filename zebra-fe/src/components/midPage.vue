@@ -16,13 +16,12 @@ export default class midPage extends Vue {}
 </script>
 <style scoped>
 #midPage_maindiv {
-  background-color: red;
+  margin: 0;
   padding: 10px;
-  height: 100vh;
+  background-color: red;
 }
 #midPage_insidediv {
-  background-color: violet;
   margin: auto;
-  height: 100vh;
+  background-color: white;
 }
 </style>
