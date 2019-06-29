@@ -36,7 +36,7 @@ import Vue from 'vue'
 import midPage from '@/components/midPage.vue';
 
 @Component({
-    components: {  },
+    components:{midPage}
 })
 export default class Schedule extends Vue {
     async asyncData() {
