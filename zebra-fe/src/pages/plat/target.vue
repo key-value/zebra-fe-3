@@ -65,8 +65,7 @@ import { Message } from "element-ui";
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
 import midPage from "@/components/midPage.vue";
-/// <reference path="@/services/Plat.Service.ts"/>
-import { PlanService } from "@/services/Plat.Service.ts";
+import { TargetService } from "@/services/Plat.Service.ts";
 
 @Component({
     components:{midPage}
@@ -75,11 +74,9 @@ export default class Target extends Vue {
 
   targetList: any = new Array();
   currentTarget = new TargetDto();
-  // id = 0;
-  // targetName = '';
-  // description = '';
   dialogFormVisible: boolean = false;
   formLabelWidth = "120px";
+  targetService :TargetService = new TargetService();
   created() { this.refreshTarget() }
   handleCommand(target: TargetDto) {
     this.showTarget(target);
@@ -99,26 +96,20 @@ export default class Target extends Vue {
   }
 
   async saveTarget() {
-    if (this.currentTarget.id === 0) {
-      await this.$axios.post("/api/target", this.currentTarget);
-    } else {
-      await this.$axios.put("/api/target", this.currentTarget);
-    }
+    await this.targetService.updateTarget(this.currentTarget);
     this.refreshTarget();
     this.dialogFormVisible = false;
-    Message("这是一条消息提示");
+    Message("更新成功!!!");
   }
 
   async refreshTarget() {
-    const v= await this.$axios.get("/api/target/all");
-      this.targetList = [...v.data];
-
+    // const v= await this.$axios.get("/api/target/all");
+      this.targetList = await this.targetService.getTargetList();
   }
 
   async deleteTarget(id: number) {
-    const deleteResult = this.$axios
-      .delete(`/api/target/${id}`)
-      .then((v: any) => this.refreshTarget());
+    await this.targetService.DeleteTarget(id);
+    await this.refreshTarget();
   }
 }
 export class TargetDto {

@@ -37,9 +37,9 @@ export class TargetController {
   async add(@Body() body: CreateTargetDto) {
     await this.targetService.add(body.targetName, body.description)
   }
-  @Put()
-  async update(@Body() body: CreateTargetDto) {
-    await this.targetService.update(body.id, body.targetName, body.description)
+  @Put(':id')
+  async update(@Param('id') id: number , @Body() body: CreateTargetDto) {
+    await this.targetService.update(id, body.targetName, body.description)
   }
   @Delete(':id')
   async delete(@Param('id') id: number){

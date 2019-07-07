@@ -20,10 +20,11 @@ export class PlanService {
 }
 export class TargetService {
     async getTargetList() {
-        return await axios.get('/api/target/all')
+        const v=  await axios.get('/api/target/all')
+        return  [...v.data];
     }
 
-    async createTarget(targetDto: TargetDto) {
+    async updateTarget(targetDto: TargetDto) {
         if (targetDto.id === 0) {
             await axios.post('/api/target', targetDto)
         } else {
@@ -31,7 +32,7 @@ export class TargetService {
         }
     }
 
-    async DeleteTarget(targetDto: TargetDto) {
-        await axios.delete(`/api/target/${targetDto.id}`)
+    async DeleteTarget(id:number) {
+        await axios.delete(`/api/target/${id}`)
     }
 } 
