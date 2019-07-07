@@ -65,16 +65,14 @@ import { Message } from "element-ui";
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
 import midPage from "@/components/midPage.vue";
+/// <reference path="@/services/Plat.Service.ts"/>
+import { PlanService } from "@/services/Plat.Service.ts";
 
 @Component({
     components:{midPage}
 })
 export default class Target extends Vue {
-  data() {
-    return {
-      targetList: Array
-    };
-  }
+
   targetList: any = new Array();
   currentTarget = new TargetDto();
   // id = 0;
@@ -82,12 +80,7 @@ export default class Target extends Vue {
   // description = '';
   dialogFormVisible: boolean = false;
   formLabelWidth = "120px";
-  created() {}
-  async asyncData() {
-    // console.log(this.targetList);
-    const data = await this.$axios.get("/api/target/all");
-    return { targetList: data };
-  }
+  created() { this.refreshTarget() }
   handleCommand(target: TargetDto) {
     this.showTarget(target);
   }
@@ -117,9 +110,9 @@ export default class Target extends Vue {
   }
 
   async refreshTarget() {
-    await this.$axios.get("/api/target/all").then((v: any) => {
+    const v= await this.$axios.get("/api/target/all");
       this.targetList = [...v.data];
-    });
+
   }
 
   async deleteTarget(id: number) {

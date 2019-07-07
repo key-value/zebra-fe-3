@@ -18,7 +18,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({ components: { Headerbar, Asidebar } })
 export default class Tlm extends Vue {
-    @Prop() private msg!: string;
+    // @Prop() private msg!: string;
 }
 </script>
 
