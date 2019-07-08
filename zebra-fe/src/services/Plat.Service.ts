@@ -3,10 +3,11 @@ import axios from 'axios'
 
 export class PlanService {
     async getPlanList() {
-        return await axios.get('/api/plan')
+        const v = await axios.get('/api/plan')
+        return [...v.data];
     }
 
-    async createPlan(planDto: PlanDto) {
+    async updatePlan(planDto: PlanDto) {
         if (planDto.id === 0) {
             await axios.post('/api/plan', planDto)
         } else {
@@ -14,14 +15,14 @@ export class PlanService {
         }
     }
 
-    async handleDelete(planDto: PlanDto) {
-        await axios.delete(`/api/plan/${planDto.id}`)
+    async handleDelete(id: number) {
+        await axios.delete(`/api/plan/${id}`)
     }
 }
 export class TargetService {
     async getTargetList() {
-        const v=  await axios.get('/api/target/all')
-        return  [...v.data];
+        const v = await axios.get('/api/target/all')
+        return [...v.data];
     }
 
     async updateTarget(targetDto: TargetDto) {
@@ -32,7 +33,7 @@ export class TargetService {
         }
     }
 
-    async DeleteTarget(id:number) {
+    async deleteTarget(id: number) {
         await axios.delete(`/api/target/${id}`)
     }
 } 

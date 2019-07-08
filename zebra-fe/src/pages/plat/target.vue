@@ -108,7 +108,7 @@ export default class Target extends Vue {
   }
 
   async deleteTarget(id: number) {
-    await this.targetService.DeleteTarget(id);
+    await this.targetService.deleteTarget(id);
     await this.refreshTarget();
   }
 }
