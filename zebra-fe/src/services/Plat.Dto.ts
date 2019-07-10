@@ -10,3 +10,9 @@
         targetName: string = "";
         description: string = "";
     }
+
+    export class TaskDto {
+        id: number = 0;
+        taskTitle: string = "";
+        description: string = "";
+      }
