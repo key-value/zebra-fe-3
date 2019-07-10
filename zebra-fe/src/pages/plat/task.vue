@@ -65,26 +65,29 @@ import { Message } from "element-ui";
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
 import midPage from "@/components/midPage.vue";
+import { TaskService, PlanService } from "@/services/Plat.Service";
 
 @Component({
-    components:{midPage}
+  components: { midPage }
 })
 export default class Task extends Vue {
-  async asyncData() {
-    // console.log(this.targetList);
-    const data:any = await this.$axios.get("/api/task");
-    const planData:any = await this.$axios.get("/api/plan");
-    data.forEach((element: any) => {
-      const plan = planData.find((x: any) => x.id === element.targetId);
-      if (plan) {
-        element.planName = plan.planName;
-      }
-    });
-    return {
-      taskList: data,
-      planList: planData
-    };
+  taskService: TaskService = new TaskService();
+  planService: PlanService = new PlanService();
+  async created() {
+    this.planList = await this.planService.getPlanList();
+    await this.asyncData();
   }
+
+  async refreshTaskList() {
+    this.taskList = await this.taskService.getTaskList();
+    for (const task of this.taskList) {
+      const plan = this.planList.find((x: any) => x.id === task.targetId);
+      if (plan) {
+        task.planName = plan.planName;
+      }
+    }
+  }
+  
   taskList: any = new Array();
   planList: any = new Array();
   currentTask: TaskDto = new TaskDto();
@@ -101,7 +104,7 @@ export default class Task extends Vue {
     }
   }
   async handleDelete(index: any, row: any) {
-    await this.$axios.delete(`/api/task/${row.id}`);
+    await this.taskService.deleteTask(row.id);
   }
   showTask(index: any, item: any) {
     let task: any;
@@ -116,26 +119,12 @@ export default class Task extends Vue {
   }
 
   async saveTask() {
-    if (this.currentTask.id === 0) {
-      await this.$axios.post("/api/task", this.currentTask);
-    } else {
-      await this.$axios.put(`/api/task/${this.currentTask.id}`, this.currentTask);
-    }
+    await this.taskService.updateTask(this.currentTask);
     this.dialogFormVisible = false;
     Message("处理成功");
     this.refreshTaskList();
   }
 
-  async refreshTaskList() {
-    const result = await this.$axios.get("/api/task");
-    this.taskList = [...result.data];
-    this.planList.forEach((element: any) => {
-      const plan = this.planList.find((x: any) => x.id === element.targetId);
-      if (plan) {
-        element.targetName = plan.targetName;
-      }
-    });
-  }
 }
 export class TaskDto {
   id: number = 0;

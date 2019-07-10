@@ -143,10 +143,10 @@ export default class Plan extends Vue {
   targetService: TargetService = new TargetService();
 
   async created() {
+    this.targetList = await this.targetService.getTargetList();
     this.refreshPlanList();
   }
   async refreshPlanList() {
-    this.targetList = await this.targetService.getTargetList();
 
     this.planList = await this.planService.getPlanList();
     for (const element of this.planList) {

@@ -1,4 +1,4 @@
-import { PlanDto, TargetDto } from './plat.Dto';
+import { PlanDto, TargetDto, TaskDto } from './plat.Dto';
 import axios from 'axios'
 
 export class PlanService {
@@ -35,5 +35,24 @@ export class TargetService {
 
     async deleteTarget(id: number) {
         await axios.delete(`/api/target/${id}`)
+    }
+}
+    
+export class TaskService {
+    async getTaskList() {
+        const v = await axios.get("/api/task");
+        return [...v.data];
+    }
+
+    async updateTask(taskDto: TaskDto) {
+        if (taskDto.id === 0) {
+            await axios.post('/api/task', taskDto)
+        } else {
+            await axios.put(`/api/task/${taskDto.id}`, taskDto)
+        }
+    }
+
+    async deleteTask(id: number) {
+        await axios.delete(`/api/task/${id}`)
     }
 } 
