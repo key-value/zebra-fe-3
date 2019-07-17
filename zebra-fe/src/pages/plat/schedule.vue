@@ -43,16 +43,17 @@ export default class Schedule extends Vue {
   planService: PlanService = new PlanService();
   targetService: TargetService = new TargetService();
   async created() {
-    this.asyncData();
-  }
-  async asyncData() {
-    // console.log(this.targetList);
-    this.planList = await this.planService.getPlanList();
     this.targetList = await this.targetService.getTargetList();
-    for (const plan of this.planList) {
-      const target = this.targetList.find((x: any) => x.id === plan.targetId);
+    this.refreshPlanList();
+  }
+  async refreshPlanList() {
+    this.planList = await this.planService.getPlanList();
+    for (const element of this.planList) {
+      const target = this.targetList.find(
+        (x: any) => x.id === element.targetId
+      );
       if (target) {
-        plan.targetName = target.targetName;
+        element.targetName = target.targetName;
       }
     }
   }
@@ -89,33 +90,13 @@ export default class Schedule extends Vue {
   }
 
   async savePlan() {
-    if (this.currentPlan.id === 0) {
-      await this.$axios.post("/api/plan", this.currentPlan);
-    } else {
-      await this.$axios.put(
-        `/api/plan/${this.currentPlan.id}`,
-        this.currentPlan
-      );
-    }
+    await this.planService.updatePlan(this.currentPlan);
     this.dialogFormVisible = false;
     Message("处理成功");
     this.refreshPlanList();
   }
 
-  async refreshPlanList() {
-    await this.$axios.get("/api/plan").then(v => {
-      console.log(v.data);
-      this.planList = [...v.data];
-      this.planList.forEach((element: any) => {
-        const target = this.targetList.find(
-          (x: any) => x.id === element.targetId
-        );
-        if (target) {
-          element.targetName = target.targetName;
-        }
-      });
-    });
-  }
+  
 }
 export class PlanDto {
   id: number = 0;
