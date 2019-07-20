@@ -16,7 +16,7 @@
             @dragstart="handleDragStart($event)"
             @dragover="allowDrop($event)"
             @drop="drop($event)"
-            v-for="(plan, sindex) in item.planList"
+            v-for="(plan, sindex) in planList"
             :key="sindex"
           >
             <div class="list_card_title">{{plan.planName}}</div>
@@ -88,7 +88,6 @@ export default class Schedule extends Vue {
       plan = this.planList[index];
       ModelUtility.merge(this.currentPlan, plan);
     }
-
     this.dialogFormVisible = true;
   }
 
