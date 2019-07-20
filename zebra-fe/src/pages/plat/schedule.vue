@@ -1,7 +1,9 @@
 <template>
   <div class="nav_main">
-    <ul class="nav_mine">
-      <li class="nav_item" v-for="(item, index) in targetList" :key="index">
+    <div class="nav_mine">
+      <div class="nav_item" v-for="(item, index) in targetList" :key="index">
+        <div class="card_info">
+          
         <div class="card_header">
           <div>{{item.targetName}}</div>
         </div>
@@ -22,8 +24,9 @@
         </ul>
         <!-- </draggable> -->
         <div class="card_floor">1111</div>
-      </li>
-    </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -107,22 +110,25 @@ export class PlanDto {
 </script>
 
 <style scoped>
+.nav_main{
+  margin: 0px;
+  display: block;
+  padding: 15px 5px;
+}
 .nav_mine {
-  padding: 15px 20px;
-  height: auto;
-  display: inline-flex;
+  height: 100%;
   flex-wrap: nowrap;
   overflow-x: auto;
+  display: flex;
 }
-
-.nav_mine .nav_item {
+ .nav_item {
+  margin: 0px 10px;
+  width: 272px;
+  white-space: nowrap;
+}
+.card_info {
   border: #aca9a7;
   border-radius: 4px;
-  margin-right: 22px;
-  list-style: none;
-  white-space: nowrap;
-  max-height: 100%;
-  width: 272px;
   text-align: left;
   background-color: #dfe1e6;
 }

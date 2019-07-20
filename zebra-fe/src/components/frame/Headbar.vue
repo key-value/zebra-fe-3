@@ -19,7 +19,9 @@ export default class HeadBar extends Vue {}
 
 <style scoped>
 .main-head{
-    padding: 25px;
     font-size: 20px;
+}
+.el-col{
+    margin: 25px 0px
 }
 </style>
