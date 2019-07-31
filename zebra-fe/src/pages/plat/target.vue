@@ -66,6 +66,7 @@ import { Component } from "vue-property-decorator";
 import Vue from "vue";
 import midPage from "@/components/midPage.vue";
 import { TargetService } from "@/services/Plat.Service.ts";
+import { TargetDto } from '@/services/Plat.Dto';
 
 @Component({
     components:{midPage}
@@ -111,11 +112,6 @@ export default class Target extends Vue {
     await this.targetService.deleteTarget(id);
     await this.refreshTarget();
   }
-}
-export class TargetDto {
-  id: number = 0;
-  targetName: string = "";
-  description: string = "";
 }
 </script>
 

@@ -3,27 +3,27 @@
     <div class="nav_mine">
       <div class="nav_item" v-for="(item, index) in targetList" :key="index">
         <div class="card_info">
-          
-        <div class="card_header">
-          <div>{{item.targetName}}</div>
-        </div>
-        <!-- <draggable class="list-group" :list="targetList" group="people">
-        <div></div>-->
-        <ul class="card_body">
-          <li
-            class="list_card_details"
-            draggable="true"
-            @dragstart="handleDragStart($event)"
-            @dragover="allowDrop($event)"
-            @drop="drop($event)"
-            v-for="(plan, sindex) in planList"
-            :key="sindex"
-          >
-            <div class="list_card_title">{{plan.planName}}</div>
-          </li>
-        </ul>
-        <!-- </draggable> -->
-        <div class="card_floor">1111</div>
+          <div class="card_header">
+            <div>{{item.targetName}}</div>
+          </div>
+
+          <ul class="card_body">
+            <draggable
+              class="dragArea list-group"
+              :list="item.PlanList"
+              :group="{ name: 'people'+item.id, put: true }"
+      :key="index"
+            >
+              <li
+                class="list_card_details"
+                v-for="(plan, sindex) in item.PlanList"
+                :key="sindex"
+              >
+                <div class="list_card_title">{{plan.planName}}</div>
+              </li>
+            </draggable>
+          </ul>
+          <div class="card_floor">1111</div>
         </div>
       </div>
     </div>
@@ -31,6 +31,7 @@
 </template>
 
 <script lang="ts">
+import Draggable from "vuedraggable";
 import { formatDate } from "@/common/dateUtility";
 import { ModelUtility } from "@/common/model.utility";
 import { Message } from "element-ui";
@@ -38,30 +39,47 @@ import { Component } from "vue-property-decorator";
 import Vue from "vue";
 import midPage from "@/components/midPage.vue";
 import { PlanService, TargetService } from "@/services/Plat.Service";
+import { PlanDto } from "@/services/Plat.Dto";
 
 @Component({
-  components: { midPage }
+  components: { midPage, Draggable }
 })
 export default class Schedule extends Vue {
   planService: PlanService = new PlanService();
   targetService: TargetService = new TargetService();
   async created() {
-    this.targetList = await this.targetService.getTargetList();
     this.refreshPlanList();
+    console.log(this.targetList)
   }
   async refreshPlanList() {
-    this.planList = await this.planService.getPlanList();
-    for (const element of this.planList) {
-      const target = this.targetList.find(
-        (x: any) => x.id === element.targetId
-      );
-      if (target) {
-        element.targetName = target.targetName;
+    let planList: Array<PlanDto> = await this.planService.getPlanList();
+    for (const element of planList) {
+      let temPlanList = new Array<PlanDto>();
+      if (this.planDic.has(element.targetId)) {
+        temPlanList = this.planDic.get(element.targetId);
+      } else {
+        this.planDic.set(element.targetId, temPlanList);
       }
+      temPlanList.push(element);
     }
+      const targetList = await this.targetService.getTargetList();
+      for (const target of targetList) {
+        target.PlanList = this.planDic.get(target.id);
+        this.targetList.push(target)
+      }
   }
+
+  async getPlanList(targetId: number) {
+    if (!this.planDic.has(targetId)) {
+      return new Array();
+    }
+    console.log(targetId);
+    console.log(this.planDic.get(targetId));
+    return this.planDic.get(targetId);
+  }
+
   targetList: any = new Array();
-  planList: any = new Array();
+  planDic: any = new Map<number, Array<PlanDto>>();
   currentPlan: PlanDto = new PlanDto();
 
   dialogFormVisible: boolean = false;
@@ -74,21 +92,23 @@ export default class Schedule extends Vue {
       return formatDate(dateMat, "yyyy-MM-dd");
     }
   }
+ removeAt(idx:any) {
+      this.list.splice(idx, 1);
+    };
+    add() {
+      id++;
+      this.list.push({ name: "Juan " + id, id, text: "" });
+    }
+  checkMove(evt: any) {
+    console.log(evt);
+    return true;
+  }
+
   handleEdit(index: any, row: any) {
     console.log(index, row);
   }
   async handleDelete(index: any, row: any) {
     await this.planService.handleDelete(index);
-  }
-  showPlan(index: any, item: PlanDto) {
-    let plan: any;
-    if (index < 0) {
-      this.currentPlan = new PlanDto();
-    } else {
-      plan = this.planList[index];
-      ModelUtility.merge(this.currentPlan, plan);
-    }
-    this.dialogFormVisible = true;
   }
 
   async savePlan() {
@@ -97,19 +117,11 @@ export default class Schedule extends Vue {
     Message("处理成功");
     this.refreshPlanList();
   }
-
-  
-}
-export class PlanDto {
-  id: number = 0;
-  beginTime: Date = new Date();
-  planName: string = "";
-  description: string = "";
 }
 </script>
 
 <style scoped>
-.nav_main{
+.nav_main {
   margin: 0px;
   display: block;
   padding: 15px 5px;
@@ -120,7 +132,7 @@ export class PlanDto {
   overflow-x: auto;
   display: flex;
 }
- .nav_item {
+.nav_item {
   margin: 0px 10px;
   width: 272px;
   white-space: nowrap;
