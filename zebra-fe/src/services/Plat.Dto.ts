@@ -5,15 +5,22 @@
         planName: string = ''
         description: string = ''
         targetId:number = 0
+        taskList: Array<TaskDto> = new Array();
     }
     export class TargetDto {
         id: number = 0;
         targetName: string = "";
         description: string = "";
-        PlanList: Array<PlanDto> = new Array();
     }
 
     export class TaskDto {
+        id: number = 0;
+        taskTitle: string = "";
+        description: string = "";
+        planId: number = 0;
+      }
+
+         export class StepDto {
         id: number = 0;
         taskTitle: string = "";
         description: string = "";
