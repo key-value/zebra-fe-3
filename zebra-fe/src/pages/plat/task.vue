@@ -66,6 +66,7 @@ import { Component } from "vue-property-decorator";
 import Vue from "vue";
 import midPage from "@/components/midPage.vue";
 import { TaskService, PlanService } from "@/services/Plat.Service";
+import { TaskDto } from '@/services/Plat.Dto';
 
 @Component({
   components: { midPage }
@@ -125,11 +126,6 @@ export default class Task extends Vue {
     this.refreshTaskList();
   }
 
-}
-export class TaskDto {
-  id: number = 0;
-  taskTitle: string = "";
-  description: string = "";
 }
 </script>
 

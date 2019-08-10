@@ -1,25 +1,21 @@
 <template>
   <div class="nav_main">
     <div class="nav_mine">
-      <div class="nav_item" v-for="(item, index) in targetList" :key="index">
+      <div class="nav_item" v-for="(item, index) in planList" :key="index">
         <div class="card_info">
           <div class="card_header">
-            <div>{{item.targetName}}</div>
+            <div>{{item.planName}}</div>
           </div>
 
           <ul class="card_body">
             <draggable
               class="dragArea list-group"
-              :list="item.PlanList"
+              :list="item.taskList"
               :group="{ name: 'people'+item.id, put: true }"
-      :key="index"
+              :key="index"
             >
-              <li
-                class="list_card_details"
-                v-for="(plan, sindex) in item.PlanList"
-                :key="sindex"
-              >
-                <div class="list_card_title">{{plan.planName}}</div>
+              <li class="list_card_details" v-for="(task, sindex) in item.taskList" :key="sindex">
+                <div class="list_card_title">{{task.taskTitle}}</div>
               </li>
             </draggable>
           </ul>
@@ -38,8 +34,8 @@ import { Message } from "element-ui";
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
 import midPage from "@/components/midPage.vue";
-import { PlanService, TargetService } from "@/services/Plat.Service";
-import { PlanDto } from "@/services/Plat.Dto";
+import { PlanService, TargetService,StepService,TaskService } from "@/services/Plat.Service";
+import { PlanDto,StepDto, TaskDto } from "@/services/Plat.Dto";
 
 @Component({
   components: { midPage, Draggable }
@@ -47,39 +43,33 @@ import { PlanDto } from "@/services/Plat.Dto";
 export default class Schedule extends Vue {
   planService: PlanService = new PlanService();
   targetService: TargetService = new TargetService();
+  stepService: StepService = new StepService();
+  taskService: TaskService = new TaskService();
   async created() {
+    const targetList = await this.targetService.getTargetList();
     this.refreshPlanList();
-    console.log(this.targetList)
   }
   async refreshPlanList() {
-    let planList: Array<PlanDto> = await this.planService.getPlanList();
-    for (const element of planList) {
-      let temPlanList = new Array<PlanDto>();
-      if (this.planDic.has(element.targetId)) {
-        temPlanList = this.planDic.get(element.targetId);
+    let taskList: Array<TaskDto> = await this.taskService.getTaskList();
+    for (const element of taskList) {
+      let temTaskList = new Array<TaskDto>();
+      if (this.taskDic.has(element.planId)) {
+        temTaskList = this.taskDic.get(element.planId);
       } else {
-        this.planDic.set(element.targetId, temPlanList);
+        this.taskDic.set(element.planId, temTaskList);
       }
-      temPlanList.push(element);
+      temTaskList.push(element);
     }
-      const targetList = await this.targetService.getTargetList();
-      for (const target of targetList) {
-        target.PlanList = this.planDic.get(target.id);
-        this.targetList.push(target)
-      }
-  }
-
-  async getPlanList(targetId: number) {
-    if (!this.planDic.has(targetId)) {
-      return new Array();
+    let planList: Array<PlanDto> = await this.planService.getPlanList();
+    for (const plan of planList) {
+      plan.taskList = this.taskDic.get(plan.id);
+      this.planList.push(plan);
     }
-    console.log(targetId);
-    console.log(this.planDic.get(targetId));
-    return this.planDic.get(targetId);
   }
 
   targetList: any = new Array();
-  planDic: any = new Map<number, Array<PlanDto>>();
+  planList: any = new Array<PlanDto>();
+  taskDic: any = new Map<number, Array<TaskDto>>();
   currentPlan: PlanDto = new PlanDto();
 
   dialogFormVisible: boolean = false;
@@ -92,13 +82,7 @@ export default class Schedule extends Vue {
       return formatDate(dateMat, "yyyy-MM-dd");
     }
   }
- removeAt(idx:any) {
-      this.list.splice(idx, 1);
-    };
-    add() {
-      id++;
-      this.list.push({ name: "Juan " + id, id, text: "" });
-    }
+
   checkMove(evt: any) {
     console.log(evt);
     return true;
@@ -124,7 +108,7 @@ export default class Schedule extends Vue {
 .nav_main {
   margin: 0px;
   display: block;
-  padding: 15px 5px;
+  padding: 15px 5px 0px 5px;
 }
 .nav_mine {
   height: 100%;
@@ -134,7 +118,7 @@ export default class Schedule extends Vue {
 }
 .nav_item {
   margin: 0px 10px;
-  width: 272px;
+  min-width: 272px;
   white-space: nowrap;
 }
 .card_info {

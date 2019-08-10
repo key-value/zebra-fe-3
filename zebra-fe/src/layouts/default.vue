@@ -4,7 +4,7 @@
             <headerbar></headerbar>
         </header>
         <aside >
-            <asidebar></asidebar>
+            <div id='asidebar' ><asidebar></asidebar></div>
             <router-view id="main_content"></router-view>
         </aside>
     </div>
@@ -36,13 +36,15 @@ header{
 aside {
     align-items: stretch;
     display: flex;
-    flex-direction: row;
     flex-grow: 1;
     background-color: darkgray;
-  overflow: hidden;
+    overflow: hidden;
+}
+#asidebar {
 }
 #main_content{
-    flex-grow: 1;
-
+    flex-grow: 2;
+    width: 0;
+    overflow-x: auto;
 }
 </style>
