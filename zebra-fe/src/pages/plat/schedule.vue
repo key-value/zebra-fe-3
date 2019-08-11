@@ -12,7 +12,7 @@
               class="dragArea list-group"
               :list="item.taskList"
               :group="{ name: 'people'+item.id, put: true }"
-              :key="index"
+              :key="index" @change="changeItem"
             >
               <li class="list_card_details" v-for="(task, sindex) in item.taskList" :key="sindex">
                 <div class="list_card_title">{{task.taskTitle}}</div>
@@ -83,9 +83,9 @@ export default class Schedule extends Vue {
     }
   }
 
-  checkMove(evt: any) {
-    console.log(evt);
-    return true;
+  changeItem(evt: any) {
+    console.log(evt.removed)
+    console.log(evt.added)
   }
 
   handleEdit(index: any, row: any) {
