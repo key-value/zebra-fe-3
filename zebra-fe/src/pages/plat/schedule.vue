@@ -82,10 +82,17 @@ export default class Schedule extends Vue {
       return formatDate(dateMat, "yyyy-MM-dd");
     }
   }
+<<<<<<<
 
   changeItem(evt: any) {
     console.log(evt.removed)
     console.log(evt.added)
+=======
+
+  checkMove(evt: any) {
+    console.log(evt);
+    return true;
+>>>>>>>
   }
 
   handleEdit(index: any, row: any) {
