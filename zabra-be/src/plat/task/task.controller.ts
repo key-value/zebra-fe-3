@@ -24,6 +24,12 @@ export class TaskController {
     async add(@Body() body: CreateTaskDto) {
       await this.taskService.add(body.taskTitle, body.planId, body.description)
     }
+
+    @Put(':id/planId/{planId}/sort/{num}')
+    async updateSort(@Param('id') id: number, @Param('planId') planId:number , @Param('num') num:number ) {
+      await this.taskService.updateSort(id,planId, num)
+    }
+
     @Put(':id')
     async update(@Param('id') id: number, @Body() body: CreateTaskDto) {
       await this.taskService.update(id, body.taskTitle, body.planId, body.description)

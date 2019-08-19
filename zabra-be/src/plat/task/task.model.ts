@@ -9,4 +9,7 @@ export default class Task extends BaseModelVm {
   public taskTitle: string
   @Column()
   public description: string
+
+  @Column()
+  public sort: number
 }
