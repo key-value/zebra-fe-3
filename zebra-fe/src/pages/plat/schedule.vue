@@ -12,8 +12,8 @@
               class="dragArea list-group"
               :list="item.taskList"
               :group="{ name: 'people'+item.id, put: true }"
-              :key="index" @change="changeItem"
-            >
+              :key="index" @add="update($event,item)" @update="update($event,item)"
+            > 
               <li class="list_card_details" v-for="(task, sindex) in item.taskList" :key="sindex">
                 <div class="list_card_title">{{task.taskTitle}}</div>
               </li>
@@ -34,9 +34,14 @@ import { Message } from "element-ui";
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
 import midPage from "@/components/midPage.vue";
-import { PlanService, TargetService,StepService,TaskService } from "@/services/Plat.Service";
-import { PlanDto,StepDto, TaskDto } from "@/services/Plat.Dto";
-import Task from './task.vue';
+import {
+  PlanService,
+  TargetService,
+  StepService,
+  TaskService
+} from "@/services/Plat.Service";
+import { PlanDto, StepDto, TaskDto } from "@/services/Plat.Dto";
+import Task from "./task.vue";
 
 @Component({
   components: { midPage, Draggable }
@@ -83,25 +88,35 @@ export default class Schedule extends Vue {
       return formatDate(dateMat, "yyyy-MM-dd");
     }
   }
+  async onMoveCallback(evt:any, originalEvent:any) {
 
-  async changeItem(evt: any) {
-    let targetevt:any = null;
-    if(evt.moved != null){
-      targetevt = evt.moved
-    }
-    if(evt.added != null){
-      targetevt = evt.added
-    }
-    let task:TaskDto = targetevt.element;
-    let newSort= targetevt.newIndex;
+
+   console.log('start', evt,originalEvent)
+    let targetevt: any = null;
+      targetevt = evt.draggedContext;
+    
+    //let task:TaskDto = targetevt.element;
+    let newSort = targetevt.newIndex;
     //await this.taskService.moveTask(task.id,task.planId,task.sort);
+    // return false; — for cancel
   }
 
-  checkMove(evt: any) {
-    console.log(evt);
-    return true;
-
+  async update (event:any,item:PlanDto) {
+    let task = item.taskList[event.newIndex];
+    var index =event.newIndex +1
+    
+    this.taskService.moveTask(task.id,item.id,index)
   }
+  
+
+  async end (event:any,item:TaskDto) {
+    console.log('end',event,item)
+    // let task = item.taskList[event.newIndex];
+    // var index =event.newIndex +1
+    
+    // this.taskService.moveTask(task.id,item.id,index)
+  }
+  
 
   handleEdit(index: any, row: any) {
     console.log(index, row);
