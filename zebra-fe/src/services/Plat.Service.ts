@@ -55,6 +55,10 @@ export class TaskService {
     async deleteTask(id: number) {
         await axios.delete(`/api/task/${id}`)
     }
+
+    async moveTask(id: number,platId:number,sort:number){
+        await axios.put(`/task/${id}/planId/${platId}/sort/${sort}`)
+    }
 } 
     
 export class StepService {

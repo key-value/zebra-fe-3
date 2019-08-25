@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Post, Body, Put, Delete } from '@nestjs/common';
 import { ApiUseTags } from '@nestjs/swagger';
 import Step from './step.model';
-import { ModelUtility } from 'src/common/model.utility';
+import { ModelUtility } from '../../common/model.utility';
 import { CreateStepDto } from './step.dto';
 import { StepService } from './step.service';
 

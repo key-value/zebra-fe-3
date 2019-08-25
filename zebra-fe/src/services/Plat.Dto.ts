@@ -18,6 +18,7 @@
         taskTitle: string = "";
         description: string = "";
         planId: number = 0;
+        sort: number=0;
       }
 
          export class StepDto {

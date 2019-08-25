@@ -17,7 +17,11 @@ export class TaskService {
   }
 
   async getAll(): Promise<Task[]> {
-    return await this.taskRepository.find()
+    return await this.taskRepository.find({ 
+      order: {
+          sort: "ASC"
+      }
+  })
   }
 
   async getAllByPlanId(planId: number): Promise<Task[]> {
@@ -50,23 +54,37 @@ export class TaskService {
     if (task == null) {
       throw new Error('Method not implemented.')
     }
-    await this.clearSort(sort, task.sort, task.planId)
+    if(planId == task.planId){
+      await this.clearSort(sort, task.sort, task.planId)
+    }else{
+      await this.clearSort(0, task.sort, task.planId)
+      await this.clearSort(sort, 0, planId)
+    }
     task.sort = sort
     task.planId = planId
     await this.taskRepository.save(task)
   }
 
   async clearSort(newSort: number, oldSort: number, platId: number) {
-    let maxSort: number = newSort > oldSort ? newSort : oldSort;
-    let minSort: number = newSort > oldSort ? oldSort : newSort;
+    let maxSort: number = 0;
+    let minSort: number = 0;
+    let filter: String = `planId = :planId`;
+    if(newSort == 0 ||oldSort == 0){
+      filter += ` and sort >= :minSort`
+      minSort = newSort + oldSort;
+    }else{
+      filter += ` and sort <= :maxSort and sort >= :minSort`
+      maxSort = newSort > oldSort ? newSort : oldSort;
+      minSort = newSort > oldSort ? oldSort : newSort;
+    }
     let queryBuilder = this.taskRepository.createQueryBuilder()
       .update(Task)
-    if (newSort > oldSort) {
+    if ((newSort > oldSort||newSort == 0)&&oldSort!=0) {
       queryBuilder = queryBuilder.set({ sort: () => "sort - 1" })
     } else {
       queryBuilder = queryBuilder.set({ sort: () => "sort + 1" })
     }
-    await queryBuilder.where("planId = :planId and sort <= :maxSort and sort >= :minSort", { planId: platId, maxSort: maxSort, minSort: minSort })
+    await queryBuilder.where(filter, { planId: platId, maxSort: maxSort, minSort: minSort })
       .execute();
 
   }

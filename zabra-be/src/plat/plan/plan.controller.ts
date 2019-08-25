@@ -2,7 +2,7 @@ import { Controller, Param, Get, Post, Body, Delete, Put } from '@nestjs/common'
 import { ApiUseTags } from '@nestjs/swagger';
 import Plan from './plan.model';
 import { CreatePlanDto } from './plan.dto';
-import { ModelUtility } from 'src/common/model.utility';
+import { ModelUtility } from '../../common/model.utility';
 import { PlanService } from './plan.service';
 
 

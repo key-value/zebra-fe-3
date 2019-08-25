@@ -36,6 +36,7 @@ import Vue from "vue";
 import midPage from "@/components/midPage.vue";
 import { PlanService, TargetService,StepService,TaskService } from "@/services/Plat.Service";
 import { PlanDto,StepDto, TaskDto } from "@/services/Plat.Dto";
+import Task from './task.vue';
 
 @Component({
   components: { midPage, Draggable }
@@ -83,9 +84,17 @@ export default class Schedule extends Vue {
     }
   }
 
-  changeItem(evt: any) {
-    console.log(evt.removed)
-    console.log(evt.added)
+  async changeItem(evt: any) {
+    let targetevt:any = null;
+    if(evt.moved != null){
+      targetevt = evt.moved
+    }
+    if(evt.added != null){
+      targetevt = evt.added
+    }
+    let task:TaskDto = targetevt.element;
+    let newSort= targetevt.newIndex;
+    //await this.taskService.moveTask(task.id,task.planId,task.sort);
   }
 
   checkMove(evt: any) {

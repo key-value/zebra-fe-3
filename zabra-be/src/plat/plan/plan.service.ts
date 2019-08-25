@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import Plan from './plan.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ModelUtility } from 'src/common/model.utility';
+import { ModelUtility } from '../../common/model.utility';
 
 @Injectable()
 export class PlanService {

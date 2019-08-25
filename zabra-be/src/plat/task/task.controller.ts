@@ -27,7 +27,7 @@ export class TaskController {
 
   @Put(':id/planId/:planId/sort/:num')
   async updateSort(@Param('id') id: number, @Param('planId') planId: number, @Param('num') num: number) {
-    await this.taskService.updateSort(id, num, planId)
+    await this.taskService.updateSort(id, +num, planId)
   }
 
   @Put(':id')
