@@ -12,14 +12,32 @@
               class="dragArea list-group"
               :list="item.taskList"
               :group="{ name: 'people'+item.id, put: true }"
-              :key="index" @add="update($event,item)" @update="update($event,item)"
-            > 
+              :key="index"
+              @add="update($event,item)"
+              @update="update($event,item)"
+            >
               <li class="list_card_details" v-for="(task, sindex) in item.taskList" :key="sindex">
                 <div class="list_card_title">{{task.taskTitle}}</div>
               </li>
             </draggable>
           </ul>
-          <div class="card_floor">1111</div>
+          <div class="card_floor">
+            <div v-if="newPlanId!=item.id">
+              <div class="el-icon-plus"></div>
+              <el-button type="text" @click="newPlanId = item.id">新任务</el-button>
+            </div>
+            <div>
+              <div v-if="newPlanId==item.id" class="card_floor_form">
+                <div>
+                  <el-input v-model="newTaskName" clearable></el-input>
+                </div>
+                <div>
+                  <el-button size="small" type="success">添加</el-button>
+                  <el-button size="small" @click="newPlanId=0">取消</el-button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -78,6 +96,8 @@ export default class Schedule extends Vue {
   taskDic: any = new Map<number, Array<TaskDto>>();
   currentPlan: PlanDto = new PlanDto();
 
+  newPlanId: number = 0;
+  newTaskName: string = "";
   dialogFormVisible: boolean = false;
   formLabelWidth = "120px";
   formatDate(row: any, column: any, cellValue: any, index: any) {
@@ -88,39 +108,29 @@ export default class Schedule extends Vue {
       return formatDate(dateMat, "yyyy-MM-dd");
     }
   }
-  async onMoveCallback(evt:any, originalEvent:any) {
-
-
-   console.log('start', evt,originalEvent)
+  async onMoveCallback(evt: any, originalEvent: any) {
+    console.log("start", evt, originalEvent);
     let targetevt: any = null;
-      targetevt = evt.draggedContext;
-    
+    targetevt = evt.draggedContext;
+
     //let task:TaskDto = targetevt.element;
     let newSort = targetevt.newIndex;
     //await this.taskService.moveTask(task.id,task.planId,task.sort);
     // return false; — for cancel
   }
 
-  async update (event:any,item:PlanDto) {
+  async update(event: any, item: PlanDto) {
     let task = item.taskList[event.newIndex];
-    var index =event.newIndex +1
-    
-    this.taskService.moveTask(task.id,item.id,index)
-  }
-  
+    var index = event.newIndex + 1;
 
-  async end (event:any,item:TaskDto) {
-    console.log('end',event,item)
-    // let task = item.taskList[event.newIndex];
-    // var index =event.newIndex +1
-    
-    // this.taskService.moveTask(task.id,item.id,index)
+    this.taskService.moveTask(task.id, item.id, index);
   }
-  
 
-  handleEdit(index: any, row: any) {
-    console.log(index, row);
+  async newTask(item: PlanDto) {
+    console.log(item);
   }
+
+  handleEdit(index: any, row: any) {}
   async handleDelete(index: any, row: any) {
     await this.planService.handleDelete(index);
   }
@@ -191,5 +201,12 @@ export default class Schedule extends Vue {
   cursor: pointer;
   color: #6b778c;
   padding: 8px;
+}
+.card_floor_form {
+  border: 2px solid #aca9a7;
+  padding: 5px;
+}
+.card_floor_form > div{
+  margin: 2px
 }
 </style>
