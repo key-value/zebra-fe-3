@@ -6,6 +6,7 @@
         description: string = ''
         targetId:number = 0
         taskList: Array<TaskDto> = new Array();
+        addTask = false;
     }
     export class TargetDto {
         id: number = 0;

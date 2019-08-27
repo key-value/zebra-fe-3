@@ -29,10 +29,12 @@
             <div>
               <div v-if="newPlanId==item.id" class="card_floor_form">
                 <div>
-                  <el-input v-model="newTaskName" clearable></el-input>
+                  <el-input 
+  type="textarea"
+  :rows="2" v-model="newTaskName" clearable></el-input>
                 </div>
                 <div>
-                  <el-button size="small" type="success">添加</el-button>
+                  <el-button size="small" @click="newTask(item)" type="success">添加</el-button>
                   <el-button size="small" @click="newPlanId=0">取消</el-button>
                 </div>
               </div>
@@ -74,6 +76,7 @@ export default class Schedule extends Vue {
     this.refreshPlanList();
   }
   async refreshPlanList() {
+    this.planList = new Array<PlanDto>();
     let taskList: Array<TaskDto> = await this.taskService.getTaskList();
     for (const element of taskList) {
       let temTaskList = new Array<TaskDto>();
@@ -128,6 +131,14 @@ export default class Schedule extends Vue {
 
   async newTask(item: PlanDto) {
     console.log(item);
+    let currentTask:TaskDto = new TaskDto();
+    currentTask.taskTitle = this.newTaskName;
+    currentTask.planId = item.id;
+    await this.taskService.updateTask(currentTask);
+    this.dialogFormVisible = false;
+    Message("处理成功");
+    this.newPlanId = 0
+    this.refreshPlanList()
   }
 
   handleEdit(index: any, row: any) {}

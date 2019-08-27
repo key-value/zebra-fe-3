@@ -32,11 +32,13 @@ export class TaskService {
     return await this.taskRepository.findOne(id)
   }
 
-  async getOneMaxSortNum(): Promise<number> {
+  async getOneMaxSortNum(id:number): Promise<number> {
     const query = this.taskRepository.createQueryBuilder("task");
-    query.select("MAX(task.sort)", "max");
+    query.select("MAX(task.sort)", "sort");
+  query.where("task.planId=:planId",{planId:id});
     // query.addSelect("MAX(quotation.quotationVersion)", "max");
-    return await query.getRawOne();
+    let task:Task = await query.getRawOne();
+    return task.sort;
   }
 
   async add(name: string, planId: number, description: string) {
@@ -44,7 +46,7 @@ export class TaskService {
     task.taskTitle = name
     task.planId = planId
     task.description = description
-    task.sort = await this.getOneMaxSortNum()
+    task.sort = await this.getOneMaxSortNum(planId)
     await this.taskRepository.insert(task)
   }
 
