@@ -1,4 +1,4 @@
-import { Controller, Param, Get, Post, Body, Delete, Put } from '@nestjs/common';
+import { Controller, Param, Get, Post, Body, Delete, Put,Query } from '@nestjs/common';
 import { ApiUseTags } from '@nestjs/swagger';
 import Plan from './plan.model';
 import { CreatePlanDto } from './plan.dto';
@@ -18,6 +18,10 @@ export class PlanController {
     @Get()
     async getAll(): Promise<Plan[]> {
         return await this.planService.getAll()
+    }
+    @Get('list/all')
+    async getPlanList(@Query('targetId') targetId: number ): Promise<Plan[]> {
+        return await this.planService.getAllbyTargetId(targetId)
     }
 
     @Post()

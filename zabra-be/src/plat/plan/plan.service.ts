@@ -20,7 +20,7 @@ export class PlanService {
   }
 
   async getAllbyTargetId(targetId: number): Promise<Plan[]> {
-    return await this.planRepository.find({ targetId})
+    return await this.planRepository.find({ targetId: targetId})
   }
 
   async add(plat: Plan) {

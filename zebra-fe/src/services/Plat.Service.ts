@@ -6,6 +6,10 @@ export class PlanService {
         const v = await axios.get('/api/plan')
         return [...v.data];
     }
+    async getPlanAllList(targetId:number) {
+        const v = await axios.get('/api/plan/list/all',{params:{targetId:targetId}})
+        return [...v.data];
+    }
 
     async updatePlan(planDto: PlanDto) {
         if (planDto.id === 0) {

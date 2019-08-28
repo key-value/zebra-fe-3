@@ -1,41 +1,59 @@
 <template>
-  <div class="nav_main">
-    <div class="nav_mine">
-      <div class="nav_item" v-for="(item, index) in planList" :key="index">
-        <div class="card_info">
-          <div class="card_header">
-            <div>{{item.planName}}</div>
-          </div>
+  <div>
+    <div class="nav_bar">
+      <el-select v-model="targetId" placeholder="请选择"
+          @change="targetChange()">
+        <el-option
+          v-for="item in targetList"
+          :key="item.id"
+          :label="item.targetName"
+          :value="item.id"
+        ></el-option>
+      </el-select>
+      <el-button  type="success">添加计划</el-button>
+    </div>
+    <div>
+      <div class="nav_main">
+        <div class="nav_mine">
+          <div class="nav_item" v-for="(item, index) in planList" :key="index">
+            <div class="card_info">
+              <div class="card_header">
+                <div>{{item.planName}}</div>
+              </div>
 
-          <ul class="card_body">
-            <draggable
-              class="dragArea list-group"
-              :list="item.taskList"
-              :group="{ name: 'people'+item.id, put: true }"
-              :key="index"
-              @add="update($event,item)"
-              @update="update($event,item)"
-            >
-              <li class="list_card_details" v-for="(task, sindex) in item.taskList" :key="sindex">
-                <div class="list_card_title">{{task.taskTitle}}</div>
-              </li>
-            </draggable>
-          </ul>
-          <div class="card_floor">
-            <div v-if="newPlanId!=item.id">
-              <div class="el-icon-plus"></div>
-              <el-button type="text" @click="newPlanId = item.id">新任务</el-button>
-            </div>
-            <div>
-              <div v-if="newPlanId==item.id" class="card_floor_form">
-                <div>
-                  <el-input 
-  type="textarea"
-  :rows="2" v-model="newTaskName" clearable></el-input>
+              <ul class="card_body">
+                <draggable
+                  class="dragArea list-group"
+                  :list="item.taskList"
+                  :group="{ name: 'people'+item.id, put: true }"
+                  :key="index"
+                  @add="update($event,item)"
+                  @update="update($event,item)"
+                >
+                  <li
+                    class="list_card_details"
+                    v-for="(task, sindex) in item.taskList"
+                    :key="sindex"
+                  >
+                    <div class="list_card_title">{{task.taskTitle}}</div>
+                  </li>
+                </draggable>
+              </ul>
+              <div class="card_floor">
+                <div v-if="newPlanId!=item.id">
+                  <div class="el-icon-plus"></div>
+                  <el-button type="text" @click="newPlanId = item.id">新任务</el-button>
                 </div>
                 <div>
-                  <el-button size="small" @click="newTask(item)" type="success">添加</el-button>
-                  <el-button size="small" @click="newPlanId=0">取消</el-button>
+                  <div v-if="newPlanId==item.id" class="card_floor_form">
+                    <div>
+                      <el-input type="textarea" :rows="2" v-model="newTaskName" clearable></el-input>
+                    </div>
+                    <div>
+                      <el-button size="small" @click="newTask(item)" type="success">添加</el-button>
+                      <el-button size="small" @click="newPlanId=0">取消</el-button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -53,18 +71,17 @@ import { ModelUtility } from "@/common/model.utility";
 import { Message } from "element-ui";
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
-import midPage from "@/components/midPage.vue";
 import {
   PlanService,
   TargetService,
   StepService,
   TaskService
 } from "@/services/Plat.Service";
-import { PlanDto, StepDto, TaskDto } from "@/services/Plat.Dto";
+import { PlanDto, StepDto, TaskDto, TargetDto } from "@/services/Plat.Dto";
 import Task from "./task.vue";
 
 @Component({
-  components: { midPage, Draggable }
+  components: { Draggable }
 })
 export default class Schedule extends Vue {
   planService: PlanService = new PlanService();
@@ -72,11 +89,16 @@ export default class Schedule extends Vue {
   stepService: StepService = new StepService();
   taskService: TaskService = new TaskService();
   async created() {
-    const targetList = await this.targetService.getTargetList();
+    this.targetList = await this.targetService.getTargetList();
+    if (this.targetList.size > 0) {
+      this.targetId = this.targetList[0].id;
+    }
+    console.log(this.targetId)
     this.refreshPlanList();
   }
   async refreshPlanList() {
     this.planList = new Array<PlanDto>();
+    this.taskDic = new Map();
     let taskList: Array<TaskDto> = await this.taskService.getTaskList();
     for (const element of taskList) {
       let temTaskList = new Array<TaskDto>();
@@ -87,14 +109,17 @@ export default class Schedule extends Vue {
       }
       temTaskList.push(element);
     }
-    let planList: Array<PlanDto> = await this.planService.getPlanList();
+    let planList: Array<PlanDto> = await this.planService.getPlanAllList(
+      this.targetId
+    );
     for (const plan of planList) {
       plan.taskList = this.taskDic.get(plan.id);
       this.planList.push(plan);
     }
   }
 
-  targetList: any = new Array();
+  targetId: number = 1;
+  targetList: any = new Array<TargetDto>();
   planList: any = new Array<PlanDto>();
   taskDic: any = new Map<number, Array<TaskDto>>();
   currentPlan: PlanDto = new PlanDto();
@@ -122,6 +147,12 @@ export default class Schedule extends Vue {
     // return false; — for cancel
   }
 
+  async targetChange() {
+    if (this.targetId > 0) {
+      this.refreshPlanList();
+    }
+  }
+
   async update(event: any, item: PlanDto) {
     let task = item.taskList[event.newIndex];
     var index = event.newIndex + 1;
@@ -131,14 +162,14 @@ export default class Schedule extends Vue {
 
   async newTask(item: PlanDto) {
     console.log(item);
-    let currentTask:TaskDto = new TaskDto();
+    let currentTask: TaskDto = new TaskDto();
     currentTask.taskTitle = this.newTaskName;
     currentTask.planId = item.id;
     await this.taskService.updateTask(currentTask);
+    this.newPlanId = 0;
+    item.taskList.push(currentTask);
     this.dialogFormVisible = false;
     Message("处理成功");
-    this.newPlanId = 0
-    this.refreshPlanList()
   }
 
   handleEdit(index: any, row: any) {}
@@ -156,6 +187,12 @@ export default class Schedule extends Vue {
 </script>
 
 <style scoped>
+.nav_bar {
+  background-color: black;
+  padding: 5px;
+  text-align: left;
+}
+
 .nav_main {
   margin: 0px;
   display: block;
@@ -217,7 +254,7 @@ export default class Schedule extends Vue {
   border: 2px solid #aca9a7;
   padding: 5px;
 }
-.card_floor_form > div{
-  margin: 2px
+.card_floor_form > div {
+  margin: 2px;
 }
 </style>
