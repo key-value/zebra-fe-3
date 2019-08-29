@@ -1,16 +1,33 @@
 <template>
   <div>
     <div class="nav_bar">
-      <el-select v-model="targetId" placeholder="请选择"
-          @change="targetChange()">
-        <el-option
-          v-for="item in targetList"
-          :key="item.id"
-          :label="item.targetName"
-          :value="item.id"
-        ></el-option>
-      </el-select>
-      <el-button  type="success">添加计划</el-button>
+      <el-row :gutter="15">
+        <el-col :span="3">
+          <el-select v-model="targetId" placeholder="请选择" @change="targetChange()">
+            <el-option
+              v-for="item in targetList"
+              :key="item.id"
+              :label="item.targetName"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="4">
+          <el-popover placement="top" width="160" v-model="addNewPlan">
+            <div style="padding:0px 0px 5px">
+              <el-input v-model="planName"></el-input>
+            </div>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text" @click="addNewPlan = false">取消</el-button>
+              <el-button type="primary" size="mini" @click="addPlan()">确定</el-button>
+            </div>
+            <el-button type="info" slot="reference">添加计划</el-button>
+          </el-popover>
+        </el-col>
+        <el-col :span="17">
+          <div class="grid-content bg-purple"></div>
+        </el-col>
+      </el-row>
     </div>
     <div>
       <div class="nav_main">
@@ -39,10 +56,10 @@
                   </li>
                 </draggable>
               </ul>
-              <div class="card_floor">
-                <div v-if="newPlanId!=item.id">
-                  <div class="el-icon-plus"></div>
-                  <el-button type="text" @click="newPlanId = item.id">新任务</el-button>
+              <div class="card_floor" >
+                <div v-if="newPlanId!=item.id" @click="newPlanId = item.id">
+                  <div class="el-icon-circle-plus" style="margin:0px 5px"></div>
+                  <el-button type="text">新任务</el-button>
                 </div>
                 <div>
                   <div v-if="newPlanId==item.id" class="card_floor_form">
@@ -51,7 +68,7 @@
                     </div>
                     <div>
                       <el-button size="small" @click="newTask(item)" type="success">添加</el-button>
-                      <el-button size="small" @click="newPlanId=0">取消</el-button>
+                      <el-button size="small" @click.prevent="newPlanId=0">取消</el-button>
                     </div>
                   </div>
                 </div>
@@ -93,7 +110,7 @@ export default class Schedule extends Vue {
     if (this.targetList.size > 0) {
       this.targetId = this.targetList[0].id;
     }
-    console.log(this.targetId)
+    console.log(this.targetId);
     this.refreshPlanList();
   }
   async refreshPlanList() {
@@ -118,6 +135,8 @@ export default class Schedule extends Vue {
     }
   }
 
+  addNewPlan: boolean = false;
+  planName: string = "";
   targetId: number = 1;
   targetList: any = new Array<TargetDto>();
   planList: any = new Array<PlanDto>();
@@ -167,6 +186,9 @@ export default class Schedule extends Vue {
     currentTask.planId = item.id;
     await this.taskService.updateTask(currentTask);
     this.newPlanId = 0;
+    if(item.taskList == null){
+      item.taskList = new Array()
+    }
     item.taskList.push(currentTask);
     this.dialogFormVisible = false;
     Message("处理成功");
@@ -176,7 +198,16 @@ export default class Schedule extends Vue {
   async handleDelete(index: any, row: any) {
     await this.planService.handleDelete(index);
   }
-
+  async addPlan() {
+    let planDto = new PlanDto();
+    planDto.id = 0;
+    planDto.planName = this.planName;
+    planDto.targetId = this.targetId;
+    await this.planService.updatePlan(planDto);
+    Message("处理成功");
+    this.refreshPlanList();
+    this.addNewPlan = false;
+  }
   async savePlan() {
     await this.planService.updatePlan(this.currentPlan);
     this.dialogFormVisible = false;
@@ -188,7 +219,6 @@ export default class Schedule extends Vue {
 
 <style scoped>
 .nav_bar {
-  background-color: black;
   padding: 5px;
   text-align: left;
 }
@@ -248,7 +278,12 @@ export default class Schedule extends Vue {
 .card_floor {
   cursor: pointer;
   color: #6b778c;
-  padding: 8px;
+  padding: 0px 8px;
+}
+
+.card_floor:hover  {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #6b778c;
 }
 .card_floor_form {
   border: 2px solid #aca9a7;

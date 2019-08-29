@@ -38,7 +38,10 @@ export class TaskService {
   query.where("task.planId=:planId",{planId:id});
     // query.addSelect("MAX(quotation.quotationVersion)", "max");
     let task:Task = await query.getRawOne();
-    return task.sort;
+    if(task == null ||task.sort == null){
+      return 1;
+    }
+    return task.sort ;
   }
 
   async add(name: string, planId: number, description: string) {

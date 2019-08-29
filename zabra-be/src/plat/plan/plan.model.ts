@@ -10,20 +10,20 @@ export default class Plan extends BaseModelVm {
   @Column()
   public planName: string
   @Column({ nullable: true })
-  public beginTime: Date
+  public beginTime: Date = new Date()
   @Column({ nullable: true })
-  public endTime: Date
+  public endTime: Date = new Date()
   @Column()
-  public description: string
+  public description: string = ""
   @Column()
-  public targetId: number
+  public targetId: number = 0
   @Column()
-  public expectations: string
+  public expectations: string = ""
   @Column()
-  public minExpectations: string
+  public minExpectations: string = ""
   @Column()
-  public expected: string
+  public expected: string = ""
   @Column()
-  public expectedNumber: number
+  public expectedNumber: number = 0
 
 }
