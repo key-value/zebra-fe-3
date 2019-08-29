@@ -2,15 +2,23 @@
   <div>
     <div class="nav_bar">
       <el-row :gutter="15">
-        <el-col :span="3">
-          <el-select v-model="targetId" placeholder="请选择" @change="targetChange()">
-            <el-option
-              v-for="item in targetList"
-              :key="item.id"
-              :label="item.targetName"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+        <el-col :span="4"> 
+          <el-button type="info" style="  margin: 0px 4px">{{target.targetName}}</el-button>
+          <el-dropdown>
+            <el-button type="info">
+              更多看板
+              <i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item
+                v-for="item in targetList"
+                @click.native="targetChange(item)"
+                :key="item.id"
+                :label="item.targetName"
+                :value="item.id"
+              >{{item.targetName}}</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </el-col>
         <el-col :span="4">
           <el-popover placement="top" width="160" v-model="addNewPlan">
@@ -24,7 +32,7 @@
             <el-button type="info" slot="reference">添加计划</el-button>
           </el-popover>
         </el-col>
-        <el-col :span="17">
+        <el-col :span="16">
           <div class="grid-content bg-purple"></div>
         </el-col>
       </el-row>
@@ -35,8 +43,10 @@
           <div class="nav_item" v-for="(item, index) in planList" :key="index">
             <div class="card_info">
               <div class="card_header">
-                <div>{{item.planName}}</div>
-                <div>{{item.planName}}</div>
+                <div  class="demonstration">{{item.planName}}
+                </div>
+                  <div style="font-size:14px">{{item.taskList != null? item.taskList.length : 0}}个任务</div>
+                
               </div>
 
               <ul class="card_body">
@@ -57,9 +67,9 @@
                   </li>
                 </draggable>
               </ul>
-              <div class="card_floor" >
-                <div v-if="newPlanId!=item.id" @click="newPlanId = item.id">
-                  <el-link type="primary"  :underline="false" icon="el-icon-circle-plus">新任务</el-link>
+              <div class="card_floor" @click="newPlanId = item.id">
+                <div v-if="newPlanId!=item.id">
+                  <el-link type="primary" :underline="false" icon="el-icon-circle-plus">新任务</el-link>
                 </div>
                 <div>
                   <div v-if="newPlanId==item.id" class="card_floor_form">
@@ -68,7 +78,7 @@
                     </div>
                     <div>
                       <el-button size="small" @click="newTask(item)" type="success">添加</el-button>
-                      <el-button size="small" @click.prevent="newPlanId=0">取消</el-button>
+                      <el-button size="small" @click.stop="newPlanId=0">取消</el-button>
                     </div>
                   </div>
                 </div>
@@ -107,8 +117,8 @@ export default class Schedule extends Vue {
   taskService: TaskService = new TaskService();
   async created() {
     this.targetList = await this.targetService.getTargetList();
-    if (this.targetList.size > 0) {
-      this.targetId = this.targetList[0].id;
+    if (this.targetList.length > 0) {
+      this.target = this.targetList[0];
     }
     this.refreshPlanList();
   }
@@ -126,7 +136,7 @@ export default class Schedule extends Vue {
       temTaskList.push(element);
     }
     let planList: Array<PlanDto> = await this.planService.getPlanAllList(
-      this.targetId
+      this.target.id
     );
     for (const plan of planList) {
       plan.taskList = this.taskDic.get(plan.id);
@@ -136,7 +146,7 @@ export default class Schedule extends Vue {
 
   addNewPlan: boolean = false;
   planName: string = "";
-  targetId: number = 1;
+  target: TargetDto = new TargetDto();
   targetList: any = new Array<TargetDto>();
   planList: any = new Array<PlanDto>();
   taskDic: any = new Map<number, Array<TaskDto>>();
@@ -164,8 +174,9 @@ export default class Schedule extends Vue {
     // return false; — for cancel
   }
 
-  async targetChange() {
-    if (this.targetId > 0) {
+  async targetChange(targetDto: TargetDto) {
+    if (targetDto != null) {
+      this.target = targetDto;
       this.refreshPlanList();
     }
   }
@@ -183,8 +194,8 @@ export default class Schedule extends Vue {
     currentTask.planId = item.id;
     await this.taskService.updateTask(currentTask);
     this.newPlanId = 0;
-    if(item.taskList == null){
-      item.taskList = new Array()
+    if (item.taskList == null) {
+      item.taskList = new Array();
     }
     item.taskList.push(currentTask);
     this.dialogFormVisible = false;
@@ -199,7 +210,7 @@ export default class Schedule extends Vue {
     let planDto = new PlanDto();
     planDto.id = 0;
     planDto.planName = this.planName;
-    planDto.targetId = this.targetId;
+    planDto.targetId = this.target.id;
     await this.planService.updatePlan(planDto);
     Message("处理成功");
     this.refreshPlanList();
@@ -278,7 +289,7 @@ export default class Schedule extends Vue {
   padding: 8px;
 }
 
-.card_floor:hover  {
+.card_floor:hover {
   background-color: rgba(0, 0, 0, 0.1);
   color: #6b778c;
 }
