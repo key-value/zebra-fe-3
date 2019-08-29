@@ -36,6 +36,7 @@
             <div class="card_info">
               <div class="card_header">
                 <div>{{item.planName}}</div>
+                <div>{{item.planName}}</div>
               </div>
 
               <ul class="card_body">
@@ -58,8 +59,7 @@
               </ul>
               <div class="card_floor" >
                 <div v-if="newPlanId!=item.id" @click="newPlanId = item.id">
-                  <div class="el-icon-circle-plus" style="margin:0px 5px"></div>
-                  <el-button type="text">新任务</el-button>
+                  <el-link type="primary"  :underline="false" icon="el-icon-circle-plus">新任务</el-link>
                 </div>
                 <div>
                   <div v-if="newPlanId==item.id" class="card_floor_form">
@@ -110,7 +110,6 @@ export default class Schedule extends Vue {
     if (this.targetList.size > 0) {
       this.targetId = this.targetList[0].id;
     }
-    console.log(this.targetId);
     this.refreshPlanList();
   }
   async refreshPlanList() {
@@ -156,7 +155,6 @@ export default class Schedule extends Vue {
     }
   }
   async onMoveCallback(evt: any, originalEvent: any) {
-    console.log("start", evt, originalEvent);
     let targetevt: any = null;
     targetevt = evt.draggedContext;
 
@@ -180,7 +178,6 @@ export default class Schedule extends Vue {
   }
 
   async newTask(item: PlanDto) {
-    console.log(item);
     let currentTask: TaskDto = new TaskDto();
     currentTask.taskTitle = this.newTaskName;
     currentTask.planId = item.id;
@@ -278,7 +275,7 @@ export default class Schedule extends Vue {
 .card_floor {
   cursor: pointer;
   color: #6b778c;
-  padding: 0px 8px;
+  padding: 8px;
 }
 
 .card_floor:hover  {
