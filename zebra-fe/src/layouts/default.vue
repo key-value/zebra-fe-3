@@ -40,8 +40,7 @@ aside {
     background-color: darkgray;
     overflow: hidden;
 }
-#asidebar {
-}
+
 #main_content{
     flex-grow: 2;
     width: 0;

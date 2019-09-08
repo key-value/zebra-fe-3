@@ -3,8 +3,8 @@
       class="el-menu-vertical-demo">
                 <el-menu-item
       v-for="(navbody, index) in navList" :default-active="$route.path" :key="'menu_'+index" :index="navbody.url">
-                    <i :class="navbody.icon"></i>
-                    <span :index="'menu_'+index" slot="title">{{navbody.title}}</span>
+                  <div class="menu-title">  <i :class="navbody.icon"></i>
+                    <span :index="'menu_'+index" slot="title">{{navbody.title}}</span></div>
                 </el-menu-item>
     </el-menu>
 </template>
@@ -21,9 +21,14 @@ export default class Asidebar extends Vue {
 </script>
 <style scoped>
 .el-menu-vertical-demo {
+    text-align:left;
     background: whitesmoke;
     height: 100%;
     width: 270px;
+}
+.menu-title{
+    margin-left: 15%;
+    font-size: 16px;
 }
 </style>
 

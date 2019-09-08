@@ -1,6 +1,6 @@
 <template>
     <el-row class="main-head">
-        <el-col :span="8">
+        <el-col :span="8"  class="main-head-title">
             <div class="grid-content bg-purple">我是一个系统</div>
         </el-col>
         <el-col :span="8">
@@ -23,5 +23,8 @@ export default class HeadBar extends Vue {}
 }
 .el-col{
     margin: 25px 0px
+}
+.main-head-title{
+    font-size: 20px;
 }
 </style>
