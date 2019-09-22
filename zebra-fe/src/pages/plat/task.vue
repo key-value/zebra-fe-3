@@ -1,61 +1,68 @@
 <template>
-  <midPage>
-    <div>
-      <el-row>
-        <el-col :span="4">
-          <el-button @click.native="showTask(-1 , null)" shadow="hover">新增</el-button>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
-          <el-table :data="taskList" stripe style="width: 100%">
-            <el-table-column :formatter="formatDate" prop="beginTime" label="启动日期" width="180"></el-table-column>
-            <el-table-column prop="taskTitle" label="名称" width="120"></el-table-column>
-            <el-table-column align="right" width="160">
-              <template slot-scope="scope">
-                <el-button size="mini" @click="showTask(scope.$index,scope.row)">Edit</el-button>
-                <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)"
-                >Delete</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-col>
-      </el-row>
-
-      <el-dialog
-        title="更新数据"
-        :visible.sync="dialogFormVisible"
-        :modalAppendToBody="false"
-        width="45%"
-      >
-        <el-form :model="currentTask">
-          <el-form-item label="任务名称" :label-width="formLabelWidth">
-            <el-input v-model="currentTask.taskTitle" autocomplete="off" placeholder="任务名称"></el-input>
-          </el-form-item>
-          <el-form-item label="所属计划" :label-width="formLabelWidth">
-            <el-select v-model="currentTask.planId" class="input-box" placeholder="请选择">
-              <el-option
-                v-for="item in planList"
-                :key="item.id"
-                :label="item.planName"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="描述" :label-width="formLabelWidth">
-            <el-input type="textarea" v-model="currentTask.description" placeholder="描述下计划"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveTask">确 定</el-button>
-        </div>
-      </el-dialog>
+  <div >
+    <div id="head-layout"></div>
+    <div id="funBar">
+      <div id="funBar-content">
+        <el-row>
+          <el-col :span="4">
+            <el-button @click.native="showTask(-1 , null)" shadow="hover">新增</el-button>
+          </el-col>
+        </el-row>
+      </div>
     </div>
-  </midPage>
+    <midPage>
+      <div>
+        <el-row>
+          <el-col>
+            <el-table :data="taskList" stripe style="width: 100%">
+              <el-table-column :formatter="formatDate" prop="beginTime" label="启动日期" width="180"></el-table-column>
+              <el-table-column prop="taskTitle" label="名称" width="120"></el-table-column>
+              <el-table-column align="right" width="160">
+                <template slot-scope="scope">
+                  <el-button size="mini" @click="showTask(scope.$index,scope.row)">Edit</el-button>
+                  <el-button
+                    size="mini"
+                    type="danger"
+                    @click="handleDelete(scope.$index, scope.row)"
+                  >Delete</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-col>
+        </el-row>
+
+        <el-dialog
+          title="更新数据"
+          :visible.sync="dialogFormVisible"
+          :modalAppendToBody="false"
+          width="45%"
+        >
+          <el-form :model="currentTask">
+            <el-form-item label="任务名称" :label-width="formLabelWidth">
+              <el-input v-model="currentTask.taskTitle" autocomplete="off" placeholder="任务名称"></el-input>
+            </el-form-item>
+            <el-form-item label="所属计划" :label-width="formLabelWidth">
+              <el-select v-model="currentTask.planId" class="input-box" placeholder="请选择">
+                <el-option
+                  v-for="item in planList"
+                  :key="item.id"
+                  :label="item.planName"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="描述" :label-width="formLabelWidth">
+              <el-input type="textarea" v-model="currentTask.description" placeholder="描述下计划"></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="saveTask">确 定</el-button>
+          </div>
+        </el-dialog>
+      </div>
+    </midPage>
+  </div>
 </template>
 
 <script lang="ts">
@@ -66,7 +73,7 @@ import { Component } from "vue-property-decorator";
 import Vue from "vue";
 import midPage from "@/components/midPage.vue";
 import { TaskService, PlanService } from "@/services/Plat.Service";
-import { TaskDto } from '@/services/Plat.Dto';
+import { TaskDto } from "@/services/Plat.Dto";
 
 @Component({
   components: { midPage }
@@ -77,7 +84,9 @@ export default class Task extends Vue {
   async created() {
     this.planList = await this.planService.getPlanList();
     await this.refreshTaskList();
+    // 事件监听滚动条
   }
+  async mounted() {}
 
   async refreshTaskList() {
     this.taskList = await this.taskService.getTaskList();
@@ -88,7 +97,6 @@ export default class Task extends Vue {
       }
     }
   }
-  
   taskList: any = new Array();
   planList: any = new Array();
   currentTask: TaskDto = new TaskDto();
@@ -125,13 +133,33 @@ export default class Task extends Vue {
     Message("处理成功");
     this.refreshTaskList();
   }
-
 }
 </script>
 
+
+
 <style scoped>
-.el-row {
-  margin-bottom: 20px;
+#funBar {
+  width: 100%;
+  height: auto;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+#head-layout {
+    height: 10px;
+}
+
+#funBar-content {
+  position: relative;
+  margin: 0px 20px;
+  background-color: #e1e1e1;
+  padding:5px;
+}
+
+.page-head-button {
+  position: absolute;
+  top: 60;
 }
 
 .text {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="midPage_maindiv">
+    <div id="midPage_maindiv" >
       <div id="midPage_insidediv">
         <slot></slot>
       </div>
@@ -12,13 +12,15 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({})
-export default class midPage extends Vue {}
+export default class midPage extends Vue {
+  
+
+}
 </script>
 <style scoped>
 #midPage_maindiv {
   margin: 0;
-  padding: 20px;
-  height: 100%;
+  padding: 0px 20px 20px;
 }
 #midPage_insidediv {
   margin: auto;
