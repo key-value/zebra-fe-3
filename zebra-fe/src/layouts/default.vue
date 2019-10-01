@@ -1,5 +1,5 @@
 <template>
-    <div class="layout_contain">
+    <div class="layout_contain primitive">
         <header>
             <headerbar></headerbar>
         </header>
@@ -23,15 +23,18 @@ export default class Tlm extends Vue {
 </script>
 
 
-<style scoped>
+<style scoped lang="scss">
+$background_color: #1E1E1E;
+
 .layout_contain {
     height: 100vh;
     display: flex;
     flex-direction: column;
-      background-color: #9b9b9b;
+     /*  background-color: $background_color ; #9b9b9b;*/
 }
 header{
-    background-color: white;
+    background-color: transparent;
+    
 }
 aside {
     align-items: stretch;
