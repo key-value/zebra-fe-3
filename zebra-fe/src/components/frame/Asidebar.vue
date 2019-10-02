@@ -1,6 +1,9 @@
 <template  >
-         <el-menu router
-      class="el-menu-vertical-demo">
+         <el-menu router 
+         background-color="#292c35"
+      text-color="#9795ac"
+      active-text-color="#f0f0f7"
+      class="el-menu-vertical-demo layout_bar">
                 <el-menu-item
       v-for="(navbody, index) in navList" :default-active="$route.path" :key="'menu_'+index" :index="navbody.url">
                   <div class="menu-title">  <i :class="navbody.icon"></i>
@@ -21,10 +24,6 @@ export default class Asidebar extends Vue {
 </script>
 <style scoped>
 .el-menu-vertical-demo {
-    text-align:left;
-    background: whitesmoke;
-    height: 100%;
-    width: 270px;
 }
 .menu-title{
     margin-left: 15%;

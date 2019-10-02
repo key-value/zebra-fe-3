@@ -1,10 +1,10 @@
 <template>
-    <div class="layout_contain primitive">
-        <header>
-            <headerbar></headerbar>
+    <div class="layout_contain layout_board">
+        <header  class="layout_title">
+            <headerbar ></headerbar>
         </header>
         <aside >
-            <div id='asidebar' ><asidebar></asidebar></div>
+            <div id='asidebar' ><asidebar ></asidebar></div>
             <router-view id="main_content"></router-view>
         </aside>
     </div>
@@ -24,7 +24,6 @@ export default class Tlm extends Vue {
 
 
 <style scoped lang="scss">
-$background_color: #1E1E1E;
 
 .layout_contain {
     height: 100vh;
@@ -32,15 +31,10 @@ $background_color: #1E1E1E;
     flex-direction: column;
      /*  background-color: $background_color ; #9b9b9b;*/
 }
-header{
-    background-color: transparent;
-    
-}
 aside {
     align-items: stretch;
     display: flex;
     flex-grow: 1;
-    background-color: darkgray;
     overflow: hidden;
 }
 

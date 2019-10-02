@@ -1,5 +1,48 @@
-$background_color: #1E1E1E;
+$background_color_1000:#1E1E1E;
+$background_color_900: #0f1016;
+$background_color_800: #191b22;
+$background_color_700: #1f2128;
+$background_color_600: #21212a;
+$background_color_500: #242730;
+$background_color_400:#292c35;
+$background_color_300: #2e2f37;
+$background_color_200:#2f323c;
+$background_color_100:#353740;
 
-.primitive{
-    background-color: $background_color;
+
+$border_color1:linear-gradient(to bottom, rgba(41,44,53,0) 0%, #292c35 100%);
+$border_color2:-webkit-gradient(linear, left top, left bottom, from(rgba(41,44,53,0)), to(#292c35));
+
+$border_color: #3c3f49;
+
+$font_color_400: #5e5e64;
+$font_color_200: #9795ac;
+$font_color_300: #b7b7ce;
+$font_color_100: #f0f0f7;
+
+.layout_board{
+    color: $background_color_1000;
+    background-color: $background_color_1000;
+}
+.layout_title{
+    color: $font_color_200;
+    background-color: $background_color_100;
+}
+.layout_bar{
+    color: $background_color_400;
+    background-color: $background_color_400;
+    text-align:left;
+    border-color: $border_color;
+    height: 100%;
+    width: 270px;
+}
+.layout_three{
+    background-color: $background_color_300;
+}
+.layout_four{
+    background-color: $background_color_200;
+}
+.layout_five{
+    color: $font_color_100;
+    background-color: $background_color_100;
 }
