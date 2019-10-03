@@ -23,8 +23,7 @@ export default class Asidebar extends Vue {
 }
 </script>
 <style scoped>
-.el-menu-vertical-demo {
-}
+
 .menu-title{
     margin-left: 15%;
     font-size: 16px;
