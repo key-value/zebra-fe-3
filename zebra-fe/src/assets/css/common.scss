@@ -35,11 +35,51 @@ $font_color_100: #f0f0f7;
     height: 100%;
     width: 270px;
 }
-.layout_three{
-    background-color: $background_color_300;
+.layout_card{
+    border: 0px;
+    width: 13rem;
+    height: 6.2rem;
+    color: $font_color_200;
+    background-color: $background_color_100;
+    border-color: $border_color;
+    border-radius: 0.2rem;
+    display: flex;
+    text-align: left;
+    flex-direction: column;
+    position: absolute;
+
 }
-.layout_four{
-    background-color: $background_color_200;
+.layout_card_title{
+    color: $font_color_100;
+    flex: 0 0 62%;
+    background-color: $background_color_300;
+    padding:0 0.8rem 0;
+    display: flex;
+}
+
+.layout_card_title_icon{
+    margin-right: 0.5rem;
+    background-size: 1.5rem 1.5rem;
+    font-size: 26px;
+    opacity:0.8;
+    margin-top: 0.75rem;
+}
+.layout_card_title_text{
+    font-weight: 400;
+    margin-top: 0.75rem;
+}
+.layout_card_title_footer{
+    display: flex;
+    box-sizing: inherit;
+}
+.layout_card_title_desc{
+    width: 100%;
+    padding: 0 0.6rem;
+    margin: 0.6rem 0;
+    font-size: 0.75rem;
+    line-height: 1.28;
+    white-space: nowrap;
+    font-weight: 300;
 }
 .layout_five{
     color: $font_color_100;

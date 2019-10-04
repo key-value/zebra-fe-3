@@ -4,7 +4,7 @@
       <el-row :gutter="24">
         <el-col :span="6" v-for="(item, index) in targetList" :key="index">
           <el-card shadow="hover">
-            <div slot="header" class="clearfix">
+            <div slot="never" class="clearfix">
               <span>{{item.targetName}}</span>
               <div style="float: right; padding: 0">
                 <el-dropdown>
@@ -22,6 +22,17 @@
             </div>
             <div>{{item.description}}</div>
           </el-card>
+          <div class="layout_card">
+            <div class="layout_card_title">
+              <span class="layout_card_title_icon el-icon-edit"></span>
+              <span class="layout_card_title_text">{{item.targetName}}</span>
+            </div>
+            <div class="layout_card_title_footer">
+              <div class="layout_card_title_desc">
+                <span>{{item.description}}</span>
+              </div>
+            </div>
+          </div>
         </el-col>
         <el-col :span="6">
           <el-card @click.native="showTarget(null)" shadow="hover">新增</el-card>
@@ -66,19 +77,20 @@ import { Component } from "vue-property-decorator";
 import Vue from "vue";
 import midPage from "@/components/midPage.vue";
 import { TargetService } from "@/services/Plat.Service.ts";
-import { TargetDto } from '@/services/Plat.Dto';
+import { TargetDto } from "@/services/Plat.Dto";
 
 @Component({
-    components:{midPage}
+  components: { midPage }
 })
 export default class Target extends Vue {
-
   targetList: any = new Array();
   currentTarget = new TargetDto();
   dialogFormVisible: boolean = false;
   formLabelWidth = "120px";
-  targetService :TargetService = new TargetService();
-  created() { this.refreshTarget() }
+  targetService: TargetService = new TargetService();
+  created() {
+    this.refreshTarget();
+  }
   handleCommand(target: TargetDto) {
     this.showTarget(target);
   }
@@ -105,7 +117,7 @@ export default class Target extends Vue {
 
   async refreshTarget() {
     // const v= await this.$axios.get("/api/target/all");
-      this.targetList = await this.targetService.getTargetList();
+    this.targetList = await this.targetService.getTargetList();
   }
 
   async deleteTarget(id: number) {
