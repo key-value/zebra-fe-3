@@ -1,10 +1,10 @@
 <template>
   <midPage>
     <div>
-      <el-row :gutter="24">
+      <!-- <el-row :gutter="24">
         <el-col :span="6" v-for="(item, index) in targetList" :key="index">
-          <el-card shadow="hover">
-            <div slot="never" class="clearfix">
+          <el-card shadow="never">
+            <div slot="header" class="clearfix">
               <span>{{item.targetName}}</span>
               <div style="float: right; padding: 0">
                 <el-dropdown>
@@ -22,6 +22,14 @@
             </div>
             <div>{{item.description}}</div>
           </el-card>
+        </el-col>
+
+        <el-col :span="6">
+          <el-card @click.native="showTarget(null)" shadow="hover">新增</el-card>
+        </el-col>
+      </el-row> -->
+      <div class="card_list">
+        <div class="card_lattice"  v-for="(item, index) in targetList" :key="index">
           <div class="layout_card">
             <div class="layout_card_title">
               <span class="layout_card_title_icon el-icon-edit"></span>
@@ -33,12 +41,8 @@
               </div>
             </div>
           </div>
-        </el-col>
-        <el-col :span="6">
-          <el-card @click.native="showTarget(null)" shadow="hover">新增</el-card>
-        </el-col>
-      </el-row>
-
+        </div>
+      </div>
       <el-dialog
         title="更新数据"
         :visible.sync="dialogFormVisible"
@@ -144,7 +148,14 @@ export default class Target extends Vue {
 .clearfix:after {
   clear: both;
 }
+.card_list {
+  display: flex;
+  flex-direction: row;
+}
 
+.card_lattice {
+  margin: 0.4rem 0.6rem;
+}
 .el-card {
   min-height: 220px;
 }
