@@ -27,9 +27,9 @@
         <el-col :span="6">
           <el-card @click.native="showTarget(null)" shadow="hover">新增</el-card>
         </el-col>
-      </el-row> -->
+      </el-row>-->
       <div class="card_list">
-        <div class="card_lattice"  v-for="(item, index) in targetList" :key="index">
+        <div class="card_lattice" v-for="(item, index) in targetList" :key="index">
           <div class="layout_card">
             <div class="layout_card_title">
               <span class="layout_card_title_icon el-icon-edit"></span>
@@ -43,6 +43,7 @@
           </div>
         </div>
       </div>
+      
       <el-dialog
         title="更新数据"
         :visible.sync="dialogFormVisible"
@@ -99,7 +100,7 @@ export default class Target extends Vue {
     this.showTarget(target);
   }
 
-  showTarget(target: any) {
+  async showTarget(target: any) {
     if (target == null) {
       this.currentTarget.targetName = "";
       this.currentTarget.description = "";
@@ -132,6 +133,8 @@ export default class Target extends Vue {
 </script>
 
 <style scoped>
+
+
 .text {
   font-size: 14px;
 }
