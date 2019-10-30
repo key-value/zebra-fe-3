@@ -38,7 +38,7 @@ export default class HeadBar extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 
 .main-head-title{
     font-size: 20px;
