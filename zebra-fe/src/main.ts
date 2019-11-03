@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import ElementUI from 'element-ui';
 import axios, { AxiosInstance } from 'axios'
+import VueBus from 'vue-bus';
 import '@/assets/css/common.scss'
 
 Vue.config.productionTip = false
@@ -14,6 +15,7 @@ declare module 'Vue/types/vue' {
 }
 
 Vue.use(ElementUI)
+Vue.use(VueBus)
 
 new Vue({
   router,

@@ -43,7 +43,7 @@
           </div>
         </div>
       </div>
-      
+
       <el-dialog
         title="更新数据"
         :visible.sync="dialogFormVisible"
@@ -81,6 +81,7 @@ import { Message } from "element-ui";
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
 import midPage from "@/components/midPage.vue";
+import { FuncBarVm } from "@/components/frameVm.ts";
 import { TargetService } from "@/services/Plat.Service.ts";
 import { TargetDto } from "@/services/Plat.Dto";
 
@@ -93,7 +94,11 @@ export default class Target extends Vue {
   dialogFormVisible: boolean = false;
   formLabelWidth = "120px";
   targetService: TargetService = new TargetService();
+  funcBarList: any = new Array();
   created() {
+    console.log(`targetCreated`);
+    this.funcBarList = JSON.parse(`[{"icon":"el-icon-circle-plus-outline","name":"add"},{"name":"update"},{"name":"delete"}]`);
+    this.$bus.emit("headFunBar",'target', this.funcBarList);
     this.refreshTarget();
   }
   handleCommand(target: TargetDto) {
@@ -133,8 +138,6 @@ export default class Target extends Vue {
 </script>
 
 <style scoped>
-
-
 .text {
   font-size: 14px;
 }
