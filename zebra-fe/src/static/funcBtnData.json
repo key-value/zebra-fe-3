@@ -1,0 +1,18 @@
+[
+    {
+        "icon":"el-icon-sunset"
+        ,"name":"add"
+    },
+    {
+        "icon":"el-icon-sunny",
+        "name":"update"
+    },
+    {
+        "icon":"el-icon-lightning"
+        ,"name":"delete"
+    },
+    {
+        "icon":"el-icon-sunny"
+        ,"name":"default"
+    }
+]

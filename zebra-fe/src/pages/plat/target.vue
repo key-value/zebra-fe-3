@@ -96,13 +96,17 @@ export default class Target extends Vue {
   targetService: TargetService = new TargetService();
   funcBarList: any = new Array();
   created() {
-    console.log(`targetCreated`);
-    this.funcBarList = JSON.parse(`[{"icon":"el-icon-circle-plus-outline","name":"add"},{"name":"update"},{"name":"delete"}]`);
-    this.$bus.emit("headFunBar",'target', this.funcBarList);
+    this.$bus.on("headFunBar", this.funcbarEvent);
     this.refreshTarget();
+    this.funcBarList = new Array<String>(`add`,`update`,`delete`);
+    this.$bus.emit("headFunBar",'target', this.funcBarList);
   }
   handleCommand(target: TargetDto) {
     this.showTarget(target);
+  }
+
+  funcbarEvent(item:FuncBarVm){
+
   }
 
   async showTarget(target: any) {

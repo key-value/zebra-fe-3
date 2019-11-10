@@ -9,7 +9,7 @@
       <div class="grid-content">
         <div class="head_func_bar">
           <div class="func_btn"  v-for="(item, index) in funcList" :key="index">
-            <div class="btn_ico">
+            <div class="btn_ico" @click="pageEvent(item)" >
               <li :class="item.icon!=null?item.icon:'el-icon-setting'"></li>
             </div>
             <div class="btn_text">{{item.name}}</div>
@@ -33,16 +33,19 @@
 import Vue from "vue";
 import { FuncBarVm } from "@/components/frameVm.ts";
 import { Component } from "vue-property-decorator";
+var _ = require('lodash');
+const funcBtnData: any = require('@/static/funcBtnData.json')
 @Component({})
 export default class HeadBar extends Vue {
   funcList: Array<FuncBarVm> = new Array();
     pageName:String=''
-  pageFunction(pageName:string,funcBarList: Array<FuncBarVm>) {
+  pageFunction(pageName:string,btnList:Array<String>,funcBarList: Array<FuncBarVm>) {
     this.funcList = new Array();
     this.pageName = pageName;
-    for (const funcVm of funcBarList) {
-        console.log(funcVm)
-      this.funcList.push(funcVm)
+      console.log(funcBtnData)
+    for (const btnName of btnList) {
+      const currentBtn =  _.find(funcBtnData, {name:btnName});
+      this.funcList.push(currentBtn);
     }
   }
 
@@ -51,9 +54,14 @@ export default class HeadBar extends Vue {
   }
 
   created() {
-    console.log(`targetCreated`);
     this.$bus.on("headFunBar", this.pageFunction);
   }
+
+  pageEvent(item:FuncBarVm){
+    
+    this.$bus.emit("headFunBar-event",this.pageName, item);
+  }
+
 }
 </script>
 
