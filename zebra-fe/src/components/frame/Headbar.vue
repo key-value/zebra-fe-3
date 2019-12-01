@@ -8,8 +8,8 @@
     <el-col :span="8">
       <div class="grid-content">
         <div class="head_func_bar">
-          <div class="func_btn"  v-for="(item, index) in funcList" :key="index">
-            <div class="btn_ico" @click="pageEvent(item)" >
+          <div class="func_btn"  @click="pageEvent(item)" v-for="(item, index) in funcList" :key="index">
+            <div class="btn_ico" >
               <li :class="item.icon!=null?item.icon:'el-icon-setting'"></li>
             </div>
             <div class="btn_text">{{item.name}}</div>
@@ -50,7 +50,9 @@ export default class HeadBar extends Vue {
   }
 
   sendFunction(funcBarVm:FuncBarVm){
-    this.$bus.emit(`pageEvent-${ this.pageName }`,FuncBarVm.name);
+    const a = `pageEvent-${ this.pageName }`;
+    console.log(a)
+    this.$bus.emit(a,FuncBarVm.name);
   }
 
   created() {
@@ -58,7 +60,6 @@ export default class HeadBar extends Vue {
   }
 
   pageEvent(item:FuncBarVm){
-    
     this.$bus.emit("headFunBar-event",this.pageName, item);
   }
 
@@ -66,6 +67,9 @@ export default class HeadBar extends Vue {
 </script>
 
 <style scoped>
+.main-head{
+  height: 30px;
+}
 .main-head-title {
   font-size: 20px;
   margin: 10px 0px;

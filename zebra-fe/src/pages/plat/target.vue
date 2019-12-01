@@ -96,7 +96,7 @@ export default class Target extends Vue {
   targetService: TargetService = new TargetService();
   funcBarList: any = new Array();
   created() {
-    this.$bus.on("headFunBar", this.funcbarEvent);
+    this.$bus.on("headFunBar-event", this.funcbarEvent);
     this.refreshTarget();
     this.funcBarList = new Array<String>(`add`,`update`,`delete`);
     this.$bus.emit("headFunBar",'target', this.funcBarList);
@@ -105,8 +105,11 @@ export default class Target extends Vue {
     this.showTarget(target);
   }
 
-  funcbarEvent(item:FuncBarVm){
-
+  funcbarEvent(pageName:string,item:FuncBarVm){
+    if(item === null){
+      return;
+    }
+    this.showTarget(null)
   }
 
   async showTarget(target: any) {
