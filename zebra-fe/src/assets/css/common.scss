@@ -19,6 +19,10 @@ $font_color_300: #9795ac;
 $font_color_200: #b7b7ce;
 $font_color_100: #f0f0f7;
 
+$main_font_color: #3A8FB7;
+
+$check_border:1px solid $main_font_color;
+
 .layout_board{
     color: $background_color_1000;
     background-color: $background_color_600;

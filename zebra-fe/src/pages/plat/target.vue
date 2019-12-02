@@ -145,7 +145,10 @@ export default class Target extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+@import '@/assets/css/common.scss';
+
 .text {
   font-size: 14px;
 }
@@ -170,6 +173,11 @@ export default class Target extends Vue {
 .card_lattice {
   margin: 0.4rem 0.6rem;
 }
+
+.check_layout_card{
+  border: $check_border;
+  }
+
 .el-card {
   min-height: 220px;
 }
