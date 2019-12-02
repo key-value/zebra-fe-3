@@ -109,6 +109,7 @@ export default class Target extends Vue {
     if(item === null){
       return;
     }
+    console.log(this.$options.methods&&this.$options.methods[item.name]&&this.$options.methods[item.name].call(this))
     this.showTarget(null)
   }
 

@@ -8,8 +8,13 @@
     <el-col :span="8">
       <div class="grid-content">
         <div class="head_func_bar">
-          <div class="func_btn"  @click="pageEvent(item)" v-for="(item, index) in funcList" :key="index">
-            <div class="btn_ico" >
+          <div
+            class="func_btn"
+            @click="pageEvent(item)"
+            v-for="(item, index) in funcList"
+            :key="index"
+          >
+            <div class="btn_ico">
               <li :class="item.icon!=null?item.icon:'el-icon-setting'"></li>
             </div>
             <div class="btn_text">{{item.name}}</div>
@@ -19,7 +24,7 @@
               <li class="el-icon-share"></li>
             </div>
             <div class="btn_text">debc</div>
-          </div> -->
+          </div>-->
         </div>
       </div>
     </el-col>
@@ -33,41 +38,48 @@
 import Vue from "vue";
 import { FuncBarVm } from "@/components/frameVm.ts";
 import { Component } from "vue-property-decorator";
-var _ = require('lodash');
-const funcBtnData: any = require('@/static/funcBtnData.json')
+var _ = require("lodash");
+const funcBtnData: any = require("@/static/funcBtnData.json");
 @Component({})
 export default class HeadBar extends Vue {
   funcList: Array<FuncBarVm> = new Array();
-    pageName:String=''
-  pageFunction(pageName:string,btnList:Array<String>,funcBarList: Array<FuncBarVm>) {
+  pageName: String = "";
+  pageFunction(
+    pageName: string,
+    btnList: Array<String>,
+    funcBarList: Array<FuncBarVm>
+  ) {
     this.funcList = new Array();
     this.pageName = pageName;
-      console.log(funcBtnData)
-    for (const btnName of btnList) {
-      const currentBtn =  _.find(funcBtnData, {name:btnName});
-      this.funcList.push(currentBtn);
+    if (btnList) {
+      for (const btnName of btnList) {
+        const currentBtn = _.find(funcBtnData, { name: btnName });
+        this.funcList.push(currentBtn);
+      }
     }
   }
 
-  sendFunction(funcBarVm:FuncBarVm){
-    const a = `pageEvent-${ this.pageName }`;
-    console.log(a)
-    this.$bus.emit(a,FuncBarVm.name);
+  sendFunction(funcBarVm: FuncBarVm) {
+    const a = `pageEvent-${this.pageName}`;
+    this.$bus.emit(a, FuncBarVm.name);
   }
 
   created() {
     this.$bus.on("headFunBar", this.pageFunction);
   }
 
-  pageEvent(item:FuncBarVm){
-    this.$bus.emit("headFunBar-event",this.pageName, item);
+  pageEvent(item: FuncBarVm) {
+    let vm = this;
+    // if(this.$options.methods[item.name] != null){
+    //   this[item.name]();
+    // }
+    this.$bus.emit("headFunBar-event", this.pageName, item);
   }
-
 }
 </script>
 
 <style scoped>
-.main-head{
+.main-head {
   height: 30px;
 }
 .main-head-title {
