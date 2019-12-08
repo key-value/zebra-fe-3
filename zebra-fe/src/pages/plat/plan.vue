@@ -1,11 +1,11 @@
 <template>
   <midPage>
-    <div>
-      <el-row>
+    <div >
+      <!-- <el-row>
         <el-col :span="4">
           <el-button @click.native="showPlan(-1 , null)" shadow="hover">新增</el-button>
         </el-col>
-      </el-row>
+      </el-row>-->
       <el-row>
         <el-col>
           <el-table :data="planList" stripe style="width: 100%">
@@ -13,7 +13,7 @@
             <el-table-column prop="planName" label="名称" width="120"></el-table-column>
             <el-table-column prop="expectations" label="成果"></el-table-column>
             <el-table-column prop="targetName" label="执行目标"></el-table-column>
-            <el-table-column align="right" width="160">
+            <el-table-column class="item_list" align="right" width="160">
               <template slot-scope="scope">
                 <el-button size="mini" @click="showPlan(scope.$index,scope.row)">Edit</el-button>
                 <el-button
@@ -105,7 +105,7 @@ export default class Plan extends Vue {
   targetList: any = new Array();
   planList: any = new Array();
   currentPlan: PlanDto = new PlanDto();
-
+  funcBarList: any = new Array();
   pickerOptions1: any = {
     disabledDate(time: any) {
       return time.getTime() <= Date.now();
@@ -142,12 +142,19 @@ export default class Plan extends Vue {
   planService: PlanService = new PlanService();
   targetService: TargetService = new TargetService();
 
+
+  funcbarEvent(pageName: string, item: PlanDto) {
+  }
+
+
   async created() {
-    this.targetList = await this.targetService.getTargetList();
+    this.$bus.on("headFunBar-event", this.funcbarEvent);
     this.refreshPlanList();
+    this.targetList = await this.targetService.getTargetList();
+    this.funcBarList = new Array<String>(`add`, `update`, `delete`);
+    this.$bus.emit("headFunBar", "plan", this.funcBarList);
   }
   async refreshPlanList() {
-
     this.planList = await this.planService.getPlanList();
     for (const element of this.planList) {
       const target = this.targetList.find(
@@ -167,7 +174,6 @@ export default class Plan extends Vue {
     }
   }
   async handleDelete(index: any, row: any) {
-    console.log(row.id);
     await this.planService.handleDelete(row.id);
     await this.refreshPlanList();
   }
@@ -192,7 +198,9 @@ export default class Plan extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "@/assets/css/common.scss";
+
 .el-row {
   margin-bottom: 20px;
 }
@@ -211,5 +219,10 @@ export default class Plan extends Vue {
 
 .input-box {
   width: 100%;
+}
+
+.item_list {
+  background-color: yellow;
+  
 }
 </style>

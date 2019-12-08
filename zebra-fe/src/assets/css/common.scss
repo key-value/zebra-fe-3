@@ -23,6 +23,8 @@ $main_font_color: #3A8FB7;
 
 $check_border:1px solid $main_font_color;
 
+
+
 .layout_board{
     color: $background_color_1000;
     background-color: $background_color_600;
@@ -39,6 +41,19 @@ $check_border:1px solid $main_font_color;
     height: 100%;
     width: 270px;
 }
+
+.el-table, .el-table__expanded-cell {
+    background-color: transparent;
+}
+
+.el-table th, .el-table tr {
+    background-color: transparent;
+}
+.el-table--striped .el-table__body tr.el-table__row--striped td{
+    background-color: transparent;
+}
+
+
 .layout_card{
     border: 0px;
     width: 13rem;

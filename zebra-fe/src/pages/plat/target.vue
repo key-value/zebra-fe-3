@@ -158,7 +158,6 @@ export default class Target extends Vue {
     this.showTarget(null);
   }
   async update(){
-    console.log(this.checkTargetList.length )
     if(this.checkTargetList.length > 1){
       this.checkTargetList.splice(0);
       Message("编辑只能选择一个!");
