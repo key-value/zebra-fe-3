@@ -28,9 +28,19 @@
           <el-card @click.native="showTarget(null)" shadow="hover">新增</el-card>
         </el-col>
       </el-row>-->
+
       <div class="card_list">
-        <div class="card_lattice" v-for="(item, index) in targetList" :key="index">
-          <div class="layout_card">
+        <div
+          class="card_lattice"
+          v-for="(item, index) in targetList"
+          :key="index"
+          :class="{check_layout_card: check(item)>=0}"
+        >
+          <div
+            class="layout_card"
+            @click.exact="onClick(item,false)"
+            @click.ctrl="onClick(item,true)"
+          >
             <div class="layout_card_title">
               <span class="layout_card_title_icon el-icon-edit"></span>
               <span class="layout_card_title_text">{{item.targetName}}</span>
@@ -95,22 +105,41 @@ export default class Target extends Vue {
   formLabelWidth = "120px";
   targetService: TargetService = new TargetService();
   funcBarList: any = new Array();
+  checkTargetList: any = new Array();
   created() {
     this.$bus.on("headFunBar-event", this.funcbarEvent);
     this.refreshTarget();
-    this.funcBarList = new Array<String>(`add`,`update`,`delete`);
-    this.$bus.emit("headFunBar",'target', this.funcBarList);
+    this.funcBarList = new Array<String>(`add`, `update`, `delete`);
+    this.$bus.emit("headFunBar", "target", this.funcBarList);
   }
   handleCommand(target: TargetDto) {
     this.showTarget(target);
   }
 
-  funcbarEvent(pageName:string,item:FuncBarVm){
-    if(item === null){
+  check(target: TargetDto) {
+    const result = this.checkTargetList.indexOf(target);
+    return result;
+  }
+
+  onClick(target: TargetDto, ctrl: boolean) {
+    const indexItem = this.check(target);
+    if (indexItem >= 0) {
+      this.checkTargetList.splice(indexItem, 1);
       return;
     }
-    console.log(this.$options.methods&&this.$options.methods[item.name]&&this.$options.methods[item.name].call(this))
-    this.showTarget(null)
+    if (!ctrl) {
+      this.checkTargetList.splice(0);
+    }
+    this.checkTargetList.push(target);
+  }
+
+  funcbarEvent(pageName: string, item: FuncBarVm) {
+    if (item === null) {
+      return;
+    }
+    this.$options.methods &&
+      this.$options.methods[item.name] &&
+      this.$options.methods[item.name].call(this);
   }
 
   async showTarget(target: any) {
@@ -124,6 +153,21 @@ export default class Target extends Vue {
       this.currentTarget.id = target.id;
     }
     this.dialogFormVisible = true;
+  }
+  async add(){
+    this.showTarget(null);
+  }
+  async update(){
+    console.log(this.checkTargetList.length )
+    if(this.checkTargetList.length > 1){
+      this.checkTargetList.splice(0);
+      Message("编辑只能选择一个!");
+      return ;
+    }
+    this.showTarget(this.checkTargetList.pop());
+  }
+  async delete(){
+    this.showTarget(null);
   }
 
   async saveTarget() {
@@ -142,12 +186,12 @@ export default class Target extends Vue {
     await this.targetService.deleteTarget(id);
     await this.refreshTarget();
   }
+
 }
 </script>
 
 <style lang="scss" scoped>
-
-@import '@/assets/css/common.scss';
+@import "@/assets/css/common.scss";
 
 .text {
   font-size: 14px;
@@ -174,9 +218,9 @@ export default class Target extends Vue {
   margin: 0.4rem 0.6rem;
 }
 
-.check_layout_card{
+.check_layout_card {
   border: $check_border;
-  }
+}
 
 .el-card {
   min-height: 220px;

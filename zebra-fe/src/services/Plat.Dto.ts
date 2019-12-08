@@ -12,6 +12,7 @@
         id: number = 0;
         targetName: string = "";
         description: string = "";
+        check:boolean = true;
     }
 
     export class TaskDto {
