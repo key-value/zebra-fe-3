@@ -42,6 +42,14 @@ $check_border:1px solid $main_font_color;
     width: 270px;
 }
 
+.float_left{
+    float: left;
+}
+.float_right{
+    float: right;
+}
+
+
 .el-table, .el-table__expanded-cell {
     background-color: transparent;
 }

@@ -3,12 +3,8 @@
     <div class="nav_bar">
       <el-row :gutter="15">
         <el-col :span="4"> 
-          <el-button type="info" style="  margin: 0px 4px">{{target.targetName}}</el-button>
-          <el-dropdown>
-            <el-button type="info">
-              更多看板
-              <i class="el-icon-arrow-down el-icon--right"></i>
-            </el-button>
+          <el-dropdown  split-button type="info">
+              {{target.targetName}}
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item
                 v-for="item in targetList"
@@ -63,7 +59,9 @@
                     v-for="(task, sindex) in item.taskList"
                     :key="sindex"
                   >
-                    <div class="list_card_title">{{task.taskTitle}}</div>
+                    <div class="list_card_title">{{task.taskTitle}}
+                      <li class="el-icon-more float_right" @click="detailTask"></li>
+                    </div>
                   </li>
                 </draggable>
               </ul>
@@ -202,7 +200,11 @@ export default class Schedule extends Vue {
     Message("处理成功");
   }
 
-  handleEdit(index: any, row: any) {}
+ async detailTask(){
+   console.log(111)
+ }
+
+  async handleEdit(index: any, row: any) {}
   async handleDelete(index: any, row: any) {
     await this.planService.handleDelete(index);
   }

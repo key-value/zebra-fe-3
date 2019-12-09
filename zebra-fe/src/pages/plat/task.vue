@@ -1,22 +1,13 @@
 <template>
   <div >
     <div id="head-layout"></div>
-    <div id="funBar">
-      <div id="funBar-content">
-        <el-row>
-          <el-col :span="4">
-            <el-button @click.native="showTask(-1 , null)" shadow="hover">新增</el-button>
-          </el-col>
-        </el-row>
-      </div>
-    </div>
     <midPage>
       <div>
         <el-row>
           <el-col>
             <el-table :data="taskList" stripe style="width: 100%">
-              <el-table-column :formatter="formatDate" prop="beginTime" label="启动日期" width="180"></el-table-column>
               <el-table-column prop="taskTitle" label="名称" width="120"></el-table-column>
+              <el-table-column prop="planName" label="所属计划" width="120"></el-table-column>
               <el-table-column align="right" width="160">
                 <template slot-scope="scope">
                   <el-button size="mini" @click="showTask(scope.$index,scope.row)">Edit</el-button>
@@ -74,6 +65,7 @@ import Vue from "vue";
 import midPage from "@/components/midPage.vue";
 import { TaskService, PlanService } from "@/services/Plat.Service";
 import { TaskDto } from "@/services/Plat.Dto";
+import { FuncBarVm } from "@/components/frameVm.ts";
 
 @Component({
   components: { midPage }
@@ -81,17 +73,20 @@ import { TaskDto } from "@/services/Plat.Dto";
 export default class Task extends Vue {
   taskService: TaskService = new TaskService();
   planService: PlanService = new PlanService();
+  funcBarList: any = new Array();
   async created() {
+    this.$bus.on("headFunBar-event", this.funcbarEvent);
     this.planList = await this.planService.getPlanList();
     await this.refreshTaskList();
+    this.funcBarList = new Array<String>(`add`);
+    this.$bus.emit("headFunBar", "target", this.funcBarList);
     // 事件监听滚动条
   }
-  async mounted() {}
 
   async refreshTaskList() {
     this.taskList = await this.taskService.getTaskList();
     for (const task of this.taskList) {
-      const plan = this.planList.find((x: any) => x.id === task.targetId);
+      const plan = this.planList.find((x: any) => x.id === task.planId);
       if (plan) {
         task.planName = plan.planName;
       }
@@ -111,6 +106,15 @@ export default class Task extends Vue {
 
       return formatDate(dateMat, "yyyy-MM-dd");
     }
+  }
+  add(){this.showTask(-1 , null)}
+  funcbarEvent(pageName: string, item: FuncBarVm) {
+    if (item === null) {
+      return;
+    }
+    this.$options.methods &&
+      this.$options.methods[item.name] &&
+      this.$options.methods[item.name].call(this);
   }
   async handleDelete(index: any, row: any) {
     await this.taskService.deleteTask(row.id);

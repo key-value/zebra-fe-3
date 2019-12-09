@@ -1,6 +1,6 @@
 <template>
   <midPage>
-    <div >
+    <div>
       <!-- <el-row>
         <el-col :span="4">
           <el-button @click.native="showPlan(-1 , null)" shadow="hover">新增</el-button>
@@ -99,6 +99,7 @@ import Vue from "vue";
 import midPage from "@/components/midPage.vue";
 import { PlanService, TargetService } from "@/services/Plat.Service";
 import { PlanDto } from "@/services/Plat.Dto";
+import { FuncBarVm } from "@/components/frameVm.ts";
 
 @Component({ components: { midPage } })
 export default class Plan extends Vue {
@@ -142,26 +143,33 @@ export default class Plan extends Vue {
   planService: PlanService = new PlanService();
   targetService: TargetService = new TargetService();
 
-
-  funcbarEvent(pageName: string, item: PlanDto) {
+  add() {
+    this.showPlan(-1, new PlanDto());
   }
 
+  funcbarEvent(pageName: string, item: FuncBarVm) {
+    if (item === null) {
+      return;
+    }
+    this.$options.methods &&
+      this.$options.methods[item.name] &&
+      this.$options.methods[item.name].call(this);}
 
   async created() {
     this.$bus.on("headFunBar-event", this.funcbarEvent);
-    this.refreshPlanList();
     this.targetList = await this.targetService.getTargetList();
-    this.funcBarList = new Array<String>(`add`, `update`, `delete`);
+    this.refreshPlanList();
+    this.funcBarList = new Array<String>(`add`);
     this.$bus.emit("headFunBar", "plan", this.funcBarList);
   }
   async refreshPlanList() {
     this.planList = await this.planService.getPlanList();
     for (const element of this.planList) {
-      const target = this.targetList.find(
-        (x: any) => x.id === element.targetId
-      );
+      const target = this.targetList.find((x: any) => x.id == element.targetId);
       if (target) {
         element.targetName = target.targetName;
+      } else {
+        element.targetName = "-";
       }
     }
   }
@@ -223,6 +231,5 @@ export default class Plan extends Vue {
 
 .item_list {
   background-color: yellow;
-  
 }
 </style>
